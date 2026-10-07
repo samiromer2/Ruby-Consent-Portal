@@ -1,0 +1,10 @@
+<p style="color: green"><%= notice %></p>
+
+<%= render @consent %>
+
+<div>
+  <%= link_to "Edit this consent", edit_consent_path(@consent) %> |
+  <%= link_to "Back to consents", consents_path %>
+
+  <%= button_to "Destroy this consent", @consent, method: :delete %>
+</div>

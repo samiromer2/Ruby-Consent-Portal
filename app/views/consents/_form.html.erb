@@ -1,0 +1,37 @@
+<%= form_with(model: consent) do |form| %>
+  <% if consent.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(consent.errors.count, "error") %> prohibited this consent from being saved:</h2>
+
+      <ul>
+        <% consent.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :citizen_id, style: "display: block" %>
+    <%= form.text_field :citizen_id %>
+  </div>
+
+  <div>
+    <%= form.label :service_id, style: "display: block" %>
+    <%= form.text_field :service_id %>
+  </div>
+
+  <div>
+    <%= form.label :granted_at, style: "display: block" %>
+    <%= form.datetime_field :granted_at %>
+  </div>
+
+  <div>
+    <%= form.label :revoked_at, style: "display: block" %>
+    <%= form.datetime_field :revoked_at %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

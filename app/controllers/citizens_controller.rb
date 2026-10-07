@@ -65,6 +65,6 @@ class CitizensController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def citizen_params
-      params.expect(citizen: [ :name, :email, :verified ])
+      params.expect(citizen: [ :name, :email ])
     end
 end

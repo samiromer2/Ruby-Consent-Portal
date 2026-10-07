@@ -1,0 +1,12 @@
+<% content_for :title, "Editing consent" %>
+
+<h1>Editing consent</h1>
+
+<%= render "form", consent: @consent %>
+
+<br>
+
+<div>
+  <%= link_to "Show this consent", @consent %> |
+  <%= link_to "Back to consents", consents_path %>
+</div>
