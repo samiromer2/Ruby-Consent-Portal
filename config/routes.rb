@@ -1,5 +1,10 @@
 Rails.application.routes.draw do
-  resources :consents
+  # resources :consents
+  resources :consents do
+    member do
+    patch :revoke
+    end
+  end
   resources :services
   resources :citizens
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

@@ -8,3 +8,7 @@
 
   <%= button_to "Destroy this consent", @consent, method: :delete %>
 </div>
+
+<% if @consent.active? %>
+  <%= button_to "Revoke consent", revoke_consent_path(@consent), method: :patch %>
+<% end %>

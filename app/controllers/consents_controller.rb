@@ -1,9 +1,10 @@
 class ConsentsController < ApplicationController
-  before_action :set_consent, only: %i[ show edit update destroy ]
+  # before_action :set_consent, only: %i[ show edit update destroy ]
+  before_action :set_consent, only: %i[ show edit update destroy revoke ]
 
   # GET /consents or /consents.json
   def index
-    @consents = Consent.all
+    @consents = Consent.includes(:citizen, :service).order(granted_at: :desc)
   end
 
   # GET /consents/1 or /consents/1.json
@@ -56,7 +57,10 @@ class ConsentsController < ApplicationController
       format.json { head :no_content }
     end
   end
-
+def revoke
+  @consent.revoke!
+  redirect_to @consent, notice: "Consent revoked."
+end
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_consent
