@@ -37,3 +37,4 @@
 # Playwright smoke test output
 /script/playwright/screenshots/
 /script/playwright/.venv/
+__pycache__/
