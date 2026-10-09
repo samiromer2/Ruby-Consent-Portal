@@ -16,11 +16,17 @@ class ConsentsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should create consent" do
+    service = Service.create!(name: "New Service")
     assert_difference("Consent.count") do
-      post consents_url, params: { consent: { citizen_id: @consent.citizen_id, granted_at: @consent.granted_at, revoked_at: @consent.revoked_at, service_id: @consent.service_id } }
+      post consents_url, params: { consent: { citizen_id: @consent.citizen_id, service_id: service.id } }
     end
-
     assert_redirected_to consent_url(Consent.last)
+  end
+
+  test "should revoke consent" do
+    patch revoke_consent_url(@consent)
+    assert_redirected_to consent_url(@consent)
+    assert_not_nil @consent.reload.revoked_at
   end
 
   test "should show consent" do

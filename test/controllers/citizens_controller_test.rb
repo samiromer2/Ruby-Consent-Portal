@@ -17,7 +17,7 @@ class CitizensControllerTest < ActionDispatch::IntegrationTest
 
   test "should create citizen" do
     assert_difference("Citizen.count") do
-      post citizens_url, params: { citizen: { email: @citizen.email, name: @citizen.name, verified: @citizen.verified } }
+            post citizens_url, params: { citizen: { email: "new@example.com", name: "New Person" } }
     end
 
     assert_redirected_to citizen_url(Citizen.last)
@@ -34,7 +34,7 @@ class CitizensControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update citizen" do
-    patch citizen_url(@citizen), params: { citizen: { email: @citizen.email, name: @citizen.name, verified: @citizen.verified } }
+    patch citizen_url(@citizen), params: { citizen: { email: @citizen.email, name: @citizen.name } }
     assert_redirected_to citizen_url(@citizen)
   end
 

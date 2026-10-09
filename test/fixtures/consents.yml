@@ -1,13 +1,15 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
 one:
   citizen: one
   service: one
-  granted_at: 2026-10-07 03:35:10
-  revoked_at: 2026-10-07 03:35:10
+  granted_at: <%= 1.day.ago %>
 
-two:
+revoked:
   citizen: two
   service: two
-  granted_at: 2026-10-07 03:35:10
-  revoked_at: 2026-10-07 03:35:10
+  granted_at: <%= 1.month.ago %>
+  revoked_at: <%= 1.day.ago %>
+
+old:
+  citizen: two
+  service: one
+  granted_at: <%= 2.years.ago %>
