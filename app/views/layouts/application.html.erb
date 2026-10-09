@@ -20,9 +20,30 @@
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
   </head>
 
   <body>
-    <%= yield %>
+    <header class="site-header">
+      <nav class="container nav">
+        <%= link_to "Consent Portal", root_path, class: "brand" %>
+        <div class="nav-links">
+          <%= link_to "Citizens", citizens_path, class: ("active" if controller_name == "citizens") %>
+          <%= link_to "Services", services_path, class: ("active" if controller_name == "services") %>
+          <%= link_to "Consents", consents_path, class: ("active" if controller_name == "consents") %>
+        </div>
+      </nav>
+    </header>
+
+    <main class="container">
+      <% if notice.present? %>
+        <p class="flash notice"><%= notice %></p>
+      <% end %>
+      <% if alert.present? %>
+        <p class="flash alert"><%= alert %></p>
+      <% end %>
+
+      <%= yield %>
+    </main>
   </body>
 </html>

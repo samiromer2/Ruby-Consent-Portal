@@ -1,12 +1,4 @@
-<div id="<%= dom_id service %>">
-  <div>
-    <strong>Name:</strong>
-    <%= service.name %>
-  </div>
-
-  <div>
-    <strong>Description:</strong>
-    <%= service.description %>
-  </div>
-
+<div id="<%= dom_id service %>" class="record">
+  <div class="record-title"><strong><%= service.name %></strong></div>
+  <div class="muted"><%= service.description %></div>
 </div>

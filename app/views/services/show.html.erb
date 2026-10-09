@@ -1,10 +1,13 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, "Service" %>
 
-<%= render @service %>
+<h1>Service</h1>
 
-<div>
-  <%= link_to "Edit this service", edit_service_path(@service) %> |
-  <%= link_to "Back to services", services_path %>
+<div class="card">
+  <%= render @service %>
+</div>
 
-  <%= button_to "Destroy this service", @service, method: :delete %>
+<div class="actions">
+  <%= link_to "Edit", edit_service_path(@service), class: "btn" %>
+  <%= link_to "Back to services", services_path, class: "btn btn-secondary" %>
+  <%= button_to "Delete", @service, method: :delete, class: "btn btn-danger", data: { turbo_confirm: "Are you sure?" } %>
 </div>

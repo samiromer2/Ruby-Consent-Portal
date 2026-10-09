@@ -1,10 +1,13 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, "Citizen" %>
 
-<%= render @citizen %>
+<h1>Citizen</h1>
 
-<div>
-  <%= link_to "Edit this citizen", edit_citizen_path(@citizen) %> |
-  <%= link_to "Back to citizens", citizens_path %>
+<div class="card">
+  <%= render @citizen %>
+</div>
 
-  <%= button_to "Destroy this citizen", @citizen, method: :delete %>
+<div class="actions">
+  <%= link_to "Edit", edit_citizen_path(@citizen), class: "btn" %>
+  <%= link_to "Back to citizens", citizens_path, class: "btn btn-secondary" %>
+  <%= button_to "Delete", @citizen, method: :delete, class: "btn btn-danger", data: { turbo_confirm: "Are you sure?" } %>
 </div>

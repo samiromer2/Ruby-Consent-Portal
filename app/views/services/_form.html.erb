@@ -1,6 +1,6 @@
 <%= form_with(model: service) do |form| %>
   <% if service.errors.any? %>
-    <div style="color: red">
+    <div class="errors">
       <h2><%= pluralize(service.errors.count, "error") %> prohibited this service from being saved:</h2>
 
       <ul>
@@ -11,17 +11,17 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :name, style: "display: block" %>
+  <div class="field">
+    <%= form.label :name %>
     <%= form.text_field :name %>
   </div>
 
-  <div>
-    <%= form.label :description, style: "display: block" %>
+  <div class="field">
+    <%= form.label :description %>
     <%= form.textarea :description %>
   </div>
 
-  <div>
-    <%= form.submit %>
+  <div class="field">
+    <%= form.submit class: "btn" %>
   </div>
 <% end %>
