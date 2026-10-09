@@ -1,6 +1,6 @@
 <%= form_with(model: citizen) do |form| %>
   <% if citizen.errors.any? %>
-    <div style="color: red">
+    <div class="errors">
       <h2><%= pluralize(citizen.errors.count, "error") %> prohibited this citizen from being saved:</h2>
 
       <ul>
@@ -11,19 +11,17 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :name, style: "display: block" %>
+  <div class="field">
+    <%= form.label :name %>
     <%= form.text_field :name %>
   </div>
 
-  <div>
-    <%= form.label :email, style: "display: block" %>
+  <div class="field">
+    <%= form.label :email %>
     <%= form.text_field :email %>
   </div>
 
-
-
-  <div>
-    <%= form.submit %>
+  <div class="field">
+    <%= form.submit class: "btn" %>
   </div>
 <% end %>

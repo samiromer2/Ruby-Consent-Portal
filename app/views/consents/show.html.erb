@@ -1,14 +1,16 @@
-<p style="color: green"><%= notice %></p>
+<% content_for :title, "Consent" %>
 
-<%= render @consent %>
+<h1>Consent</h1>
 
-<div>
-  <%= link_to "Edit this consent", edit_consent_path(@consent) %> |
-  <%= link_to "Back to consents", consents_path %>
-
-  <%= button_to "Destroy this consent", @consent, method: :delete %>
+<div class="card">
+  <%= render @consent %>
 </div>
 
-<% if @consent.active? %>
-  <%= button_to "Revoke consent", revoke_consent_path(@consent), method: :patch %>
-<% end %>
+<div class="actions">
+  <% if @consent.active? %>
+    <%= button_to "Revoke consent", revoke_consent_path(@consent), method: :patch, class: "btn btn-warning" %>
+  <% end %>
+  <%= link_to "Edit", edit_consent_path(@consent), class: "btn" %>
+  <%= link_to "Back to consents", consents_path, class: "btn btn-secondary" %>
+  <%= button_to "Delete", @consent, method: :delete, class: "btn btn-danger", data: { turbo_confirm: "Are you sure?" } %>
+</div>

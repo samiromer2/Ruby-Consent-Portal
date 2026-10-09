@@ -1,13 +1,4 @@
-<div id="<%= dom_id citizen %>">
-  <div>
-    <strong>Name:</strong>
-    <%= citizen.name %>
-  </div>
-
-  <div>
-    <strong>Email:</strong>
-    <%= citizen.email %>
-  </div>
-
-
+<div id="<%= dom_id citizen %>" class="record">
+  <div class="record-title"><strong><%= citizen.name %></strong></div>
+  <div class="muted"><%= citizen.email %></div>
 </div>

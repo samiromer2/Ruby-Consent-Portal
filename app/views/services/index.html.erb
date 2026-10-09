@@ -1,16 +1,19 @@
-<p style="color: green"><%= notice %></p>
-
 <% content_for :title, "Services" %>
 
-<h1>Services</h1>
+<div class="page-header">
+  <h1>Services</h1>
+  <%= link_to "New service", new_service_path, class: "btn" %>
+</div>
 
-<div id="services">
+<div id="services" class="card-list">
   <% @services.each do |service| %>
-    <%= render service %>
-    <p>
-      <%= link_to "Show this service", service %>
-    </p>
+    <div class="card">
+      <%= render service %>
+      <%= link_to "View", service, class: "card-link" %>
+    </div>
   <% end %>
 </div>
 
-<%= link_to "New service", new_service_path %>
+<% if @services.empty? %>
+  <p class="empty">No services yet.</p>
+<% end %>

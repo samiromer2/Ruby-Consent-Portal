@@ -1,22 +1,17 @@
-<div id="<%= dom_id consent %>">
-  <div>
-    <strong>Citizen:</strong>
-    <%= consent.citizen.name %>
+<div id="<%= dom_id consent %>" class="record">
+  <div class="record-title">
+    <strong><%= consent.citizen.name %></strong> &rarr; <%= consent.service.name %>
+    <% if consent.active? %>
+      <span class="badge badge-active">Active</span>
+    <% else %>
+      <span class="badge badge-revoked">Revoked</span>
+    <% end %>
   </div>
 
-  <div>
-    <strong>Service:</strong>
-    <%= consent.service.name %>
+  <div class="muted">
+    Granted <%= l consent.granted_at, format: :long %>
+    <% if consent.revoked_at %>
+      &middot; Revoked <%= l consent.revoked_at, format: :long %>
+    <% end %>
   </div>
-
-  <div>
-    <strong>Granted at:</strong>
-    <%= consent.granted_at %>
-  </div>
-
-  <div>
-    <strong>Revoked at:</strong>
-    <%= consent.revoked_at %>
-  </div>
-
 </div>

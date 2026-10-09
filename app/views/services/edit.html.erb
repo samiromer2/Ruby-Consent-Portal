@@ -4,9 +4,8 @@
 
 <%= render "form", service: @service %>
 
-<br>
 
-<div>
-  <%= link_to "Show this service", @service %> |
-  <%= link_to "Back to services", services_path %>
+<div class="actions">
+  <%= link_to "Show this service", @service, class: "btn btn-secondary" %>
+  <%= link_to "Back to services", services_path, class: "btn btn-secondary" %>
 </div>

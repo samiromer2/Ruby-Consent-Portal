@@ -33,3 +33,7 @@
 # Ignore key files for decrypting credentials and more.
 /config/*.key
 
+
+# Playwright smoke test output
+/script/playwright/screenshots/
+/script/playwright/.venv/

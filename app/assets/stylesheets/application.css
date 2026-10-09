@@ -1,10 +1,219 @@
 /*
- * This is a manifest file that'll be compiled into application.css.
- *
- * With Propshaft, assets are served efficiently without preprocessing steps. You can still include
- * application-wide styles in this file, but keep in mind that CSS precedence will follow the standard
- * cascading order, meaning styles declared later in the document or manifest will override earlier ones,
- * depending on specificity.
- *
- * Consider organizing styles into separate files for maintainability.
+ * Simple, dependency-free styles for the Consent Portal.
  */
+
+:root {
+  --bg: #f5f7fa;
+  --surface: #ffffff;
+  --text: #1f2933;
+  --muted: #616e7c;
+  --border: #e4e7eb;
+  --primary: #1d4ed8;
+  --primary-dark: #1e40af;
+  --danger: #b91c1c;
+  --warning: #b45309;
+  --success-bg: #dcfce7;
+  --success-text: #166534;
+  --error-bg: #fee2e2;
+  --error-text: #991b1b;
+  --radius: 8px;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+}
+
+a { color: var(--primary); }
+
+h1 { font-size: 1.75rem; margin: 0 0 1rem; }
+
+.container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+main.container { padding-top: 2rem; padding-bottom: 3rem; }
+
+/* Header + navigation */
+.site-header {
+  background: var(--primary);
+  color: #fff;
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  min-height: 60px;
+}
+
+.brand {
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.15rem;
+  text-decoration: none;
+}
+
+.nav-links { display: flex; gap: 0.25rem; }
+
+.nav-links a {
+  color: #dbeafe;
+  text-decoration: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radius);
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
+}
+
+/* Page header */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.page-header h1 { margin: 0; }
+
+/* Cards */
+.card-list { display: grid; gap: 0.75rem; }
+
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+}
+
+.record-title { font-size: 1.05rem; }
+
+.muted { color: var(--muted); font-size: 0.9rem; }
+
+.card-link { white-space: nowrap; font-weight: 600; text-decoration: none; }
+
+.empty { color: var(--muted); }
+
+/* Badges */
+.badge {
+  display: inline-block;
+  margin-left: 0.4rem;
+  padding: 0.1rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+.badge-active { background: var(--success-bg); color: var(--success-text); }
+.badge-revoked { background: var(--error-bg); color: var(--error-text); }
+
+/* Buttons */
+.btn,
+input[type="submit"] {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--primary);
+  border-radius: var(--radius);
+  background: var(--primary);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.btn:hover,
+input[type="submit"]:hover { background: var(--primary-dark); }
+
+.btn-secondary {
+  background: var(--surface);
+  color: var(--text);
+  border-color: #cbd2d9;
+}
+
+.btn-secondary:hover { background: var(--bg); }
+
+.btn-danger { background: var(--danger); border-color: var(--danger); }
+.btn-danger:hover { background: #991b1b; }
+
+.btn-warning { background: var(--warning); border-color: var(--warning); }
+.btn-warning:hover { background: #92400e; }
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+/* button_to wraps its button in a form; keep it inline */
+.actions form { margin: 0; }
+
+/* Forms */
+form .field { margin-bottom: 1rem; }
+
+form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="datetime-local"],
+form select,
+form textarea {
+  width: 100%;
+  max-width: 480px;
+  padding: 0.5rem 0.65rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  font: inherit;
+}
+
+form textarea { min-height: 100px; }
+
+/* Flash messages + errors */
+.flash {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius);
+  margin: 0 0 1rem;
+}
+
+.flash.notice { background: var(--success-bg); color: var(--success-text); }
+.flash.alert { background: var(--error-bg); color: var(--error-text); }
+
+.errors {
+  background: var(--error-bg);
+  color: var(--error-text);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+}
+
+.errors h2 { font-size: 1rem; margin: 0 0 0.5rem; }
+.errors ul { margin: 0; padding-left: 1.25rem; }
+
+@media (max-width: 560px) {
+  .card { flex-direction: column; align-items: flex-start; }
+}

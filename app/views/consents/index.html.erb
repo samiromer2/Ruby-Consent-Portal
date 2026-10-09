@@ -1,16 +1,19 @@
-<p style="color: green"><%= notice %></p>
-
 <% content_for :title, "Consents" %>
 
-<h1>Consents</h1>
+<div class="page-header">
+  <h1>Consents</h1>
+  <%= link_to "New consent", new_consent_path, class: "btn" %>
+</div>
 
-<div id="consents">
+<div id="consents" class="card-list">
   <% @consents.each do |consent| %>
-    <%= render consent %>
-    <p>
-      <%= link_to "Show this consent", consent %>
-    </p>
+    <div class="card">
+      <%= render consent %>
+      <%= link_to "View", consent, class: "card-link" %>
+    </div>
   <% end %>
 </div>
 
-<%= link_to "New consent", new_consent_path %>
+<% if @consents.empty? %>
+  <p class="empty">No consents yet.</p>
+<% end %>
