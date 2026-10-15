@@ -1,8 +1,8 @@
 # Consent Portal
 
-A small Rails app where **citizens** give **consent** to government **services** and can revoke it later.
+A Ruby on Rails app for managing consent: **citizens** give **consent** to **services** and can revoke it at any time.
 
-I built it to learn Rails conventions, coming from Laravel. It covers the core of a consent-management product: data integrity in PostgreSQL, a custom revoke action, a background job, safe migrations, and tests at every level.
+It covers the core of a consent-management system: data integrity enforced in both Ruby and PostgreSQL, a custom revoke action, a background job for expiry, a zero-downtime migration, and tests at every level from models to the browser.
 
 ## Tech stack
 
@@ -23,6 +23,20 @@ I built it to learn Rails conventions, coming from Laravel. It covers the core o
   - Emails are normalized (trimmed and lowercased) and must be unique regardless of case.
 - **No N+1 queries.** The consents list eager-loads citizens and services with `includes`.
 - **Zero-downtime migration.** The `revoked_at` index is built with `algorithm: :concurrently`, so it doesn't lock writes on a large table.
+
+## Project layout
+
+The main Ruby code lives in a handful of files:
+
+| File | What it does |
+|---|---|
+| `app/models/citizen.rb` | Associations, email normalization and validation |
+| `app/models/consent.rb` | Uniqueness rule, `active` scope, `active?` and `revoke!` |
+| `app/models/service.rb` | Associations and validation |
+| `app/controllers/consents_controller.rb` | CRUD plus the `revoke` member action |
+| `app/jobs/expire_stale_consents_job.rb` | Revokes consents older than a year |
+| `config/routes.rb` | RESTful routes, with `PATCH /consents/:id/revoke` |
+| `db/migrate/` | Schema history, including the concurrent index migration |
 
 ## Getting started
 
@@ -100,7 +114,7 @@ services   name, description
 consents   citizen_id, service_id (unique together), granted_at, revoked_at
 ```
 
-## What I'd add next
+## Roadmap
 
 - **Authentication** through an identity provider (OIDC, for example Keycloak), so the app trusts the provider's ID token instead of storing passwords.
 - **Authorization** with Pundit, so a citizen can only see and revoke their own consents.
