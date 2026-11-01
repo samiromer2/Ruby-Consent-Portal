@@ -28,8 +28,8 @@ Where the project is now, and the steps to turn it into a complete Rails app. Wo
 Goal: no loose ends before building new features.
 
 - [ ] Protect consent history: remove `:granted_at` and `:revoked_at` from `consent_params` and from the form. Revoking only happens through the Revoke button. Add a test proving `PATCH /consents/:id` can't change `revoked_at`.
-- [ ] Decide what to do with `users`/`sessions`: keep them for Phase 1, or drop them with a migration. (Recommended: keep, Phase 1 uses them.)
-- [ ] Remove `image_processing` from the Gemfile.
+- [x] Decide what to do with `users`/`sessions`: keep them for Phase 1. The tables and `bcrypt` stay so the authentication generator can reuse them.
+- [x] Remove `image_processing` from the Gemfile.
 - [ ] Tidy `ExpireStaleConsentsJob#perform` and the controller indentation.
 - [ ] Turn on branch protection for `main` on GitHub: require the 5 CI checks to pass.
 
