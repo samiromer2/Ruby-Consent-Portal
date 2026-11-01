@@ -40,8 +40,28 @@ class ConsentsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update consent" do
-    patch consent_url(@consent), params: { consent: { citizen_id: @consent.citizen_id, granted_at: @consent.granted_at, revoked_at: @consent.revoked_at, service_id: @consent.service_id } }
+    patch consent_url(@consent), params: { consent: { citizen_id: @consent.citizen_id, service_id: @consent.service_id } }
     assert_redirected_to consent_url(@consent)
+  end
+
+  test "patch cannot change revoked_at or granted_at" do
+    consent = consents(:revoked)
+    granted_at = consent.granted_at
+    revoked_at = consent.revoked_at
+
+    patch consent_url(consent), params: {
+      consent: {
+        citizen_id: consent.citizen_id,
+        service_id: consent.service_id,
+        granted_at: 5.years.ago,
+        revoked_at: ""
+      }
+    }
+
+    assert_redirected_to consent_url(consent)
+    consent.reload
+    assert_equal granted_at.to_i, consent.granted_at.to_i
+    assert_equal revoked_at.to_i, consent.revoked_at.to_i
   end
 
   test "should destroy consent" do

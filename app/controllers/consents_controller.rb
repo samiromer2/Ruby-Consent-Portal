@@ -57,18 +57,20 @@ class ConsentsController < ApplicationController
       format.json { head :no_content }
     end
   end
-def revoke
-  @consent.revoke!
-  redirect_to @consent, notice: "Consent revoked."
-end
+
+  def revoke
+    @consent.revoke!
+    redirect_to @consent, notice: "Consent revoked."
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_consent
       @consent = Consent.find(params.expect(:id))
     end
 
-    # Only allow a list of trusted parameters through.
+    # granted_at and revoked_at are history. Revoking happens only through #revoke.
     def consent_params
-      params.expect(consent: [ :citizen_id, :service_id, :granted_at, :revoked_at ])
+      params.expect(consent: [ :citizen_id, :service_id ])
     end
 end
