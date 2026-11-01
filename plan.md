@@ -27,7 +27,7 @@ Where the project is now, and the steps to turn it into a complete Rails app. Wo
 
 Goal: no loose ends before building new features.
 
-- [ ] Protect consent history: remove `:granted_at` and `:revoked_at` from `consent_params` and from the form. Revoking only happens through the Revoke button. Add a test proving `PATCH /consents/:id` can't change `revoked_at`.
+- [x] Protect consent history: remove `:granted_at` and `:revoked_at` from `consent_params` and from the form. Revoking only happens through the Revoke button. Add a test proving `PATCH /consents/:id` can't change `revoked_at`.
 - [x] Decide what to do with `users`/`sessions`: keep them for Phase 1. The tables and `bcrypt` stay so the authentication generator can reuse them.
 - [x] Remove `image_processing` from the Gemfile.
 - [ ] Tidy `ExpireStaleConsentsJob#perform` and the controller indentation.
@@ -39,12 +39,12 @@ Done when: CI green, no unused gems or tables without a plan.
 
 Goal: people must sign in, and each user is linked to a citizen.
 
-- [ ] Run `bin/rails generate authentication` again (it reuses the existing tables) and read every generated file.
-- [ ] Link `User` to `Citizen` (`has_one :citizen` / `belongs_to :user`).
-- [ ] Add a sign-up page (the generator only does sign-in).
-- [ ] Show the signed-in user and a Sign out button in the nav bar.
-- [ ] Update every controller test and the system test to sign in first (`sign_in_as` helper).
-- [ ] Add rate limiting to sign-in (`rate_limit` is built into Rails 8).
+- [x] Run `bin/rails generate authentication` again (it reuses the existing tables) and read every generated file.
+- [x] Link `User` to `Citizen` (`has_one :citizen` / `belongs_to :user`).
+- [x] Add a sign-up page (the generator only does sign-in).
+- [x] Show the signed-in user and a Sign out button in the nav bar.
+- [x] Update every controller test and the system test to sign in first (`sign_in_as` helper).
+- [x] Add rate limiting to sign-in (`rate_limit` is built into Rails 8).
 
 Done when: every page except sign-in and sign-up redirects to sign-in when logged out, and all tests pass.
 

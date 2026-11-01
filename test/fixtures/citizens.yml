@@ -1,9 +1,11 @@
 one:
+  user: one
   name: Alice Tremblay
   email: alice@example.com
   verified: true
 
 two:
+  user: two
   name: Bob Singh
   email: bob@example.com
   verified: false

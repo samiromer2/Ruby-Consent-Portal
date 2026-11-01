@@ -3,6 +3,7 @@ require "test_helper"
 class ServicesControllerTest < ActionDispatch::IntegrationTest
   setup do
     @service = services(:one)
+    sign_in_as(users(:one))
   end
 
   test "should get index" do

@@ -3,11 +3,21 @@ require "test_helper"
 class ConsentsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @consent = consents(:one)
+    sign_in_as(users(:one))
   end
 
   test "should get index" do
     get consents_url
     assert_response :success
+  end
+
+  test "redirects to sign in when logged out" do
+    sign_out
+
+    [ consents_url, citizens_url, services_url ].each do |url|
+      get url
+      assert_redirected_to new_session_url
+    end
   end
 
   test "should get new" do

@@ -1,7 +1,7 @@
 """End-to-end smoke test for the Consent Portal, driven by Playwright.
 
 Walks through the main user journey in a real browser:
-  1. create a citizen
+  1. sign up (this creates the citizen linked to the account)
   2. create a service
   3. grant consent (citizen -> service)
   4. try to grant the same consent again and expect it to be blocked
@@ -32,14 +32,19 @@ def screenshot(page: Page, name: str) -> None:
     page.screenshot(path=SCREENSHOT_DIR / f"{name}.png", full_page=True)
 
 
-def create_citizen(page: Page, base_url: str, name: str, email: str) -> str:
-    step(f"Creating citizen {name} <{email}>")
-    page.goto(f"{base_url}/citizens/new")
+def sign_up(page: Page, base_url: str, name: str, email: str) -> str:
+    step(f"Signing up {name} <{email}>")
+    page.goto(f"{base_url}/registration/new")
     page.get_by_label("Name").fill(name)
-    page.get_by_label("Email").fill(email)
-    page.get_by_role("button", name="Create Citizen").click()
+    page.get_by_label("Email address").fill(email)
+    page.get_by_label("Password", exact=True).fill("password")
+    page.get_by_label("Password confirmation").fill("password")
+    page.get_by_role("button", name="Sign up").click()
 
-    expect(page.locator(".flash.notice")).to_have_text("Citizen was successfully created.")
+    expect(page.locator(".flash.notice")).to_have_text("Account created.")
+
+    page.goto(f"{base_url}/citizens")
+    page.locator(".card", has_text=name).get_by_role("link", name="View").click()
     screenshot(page, "1_citizen_created")
     return page.url
 
@@ -110,7 +115,7 @@ def run(base_url: str, headed: bool, slow_mo: int, keep: bool) -> None:
         page.on("dialog", lambda dialog: dialog.accept())
 
         try:
-            citizen_url = create_citizen(page, base_url, citizen_name, citizen_email)
+            citizen_url = sign_up(page, base_url, citizen_name, citizen_email)
             service_url = create_service(page, base_url, service_name)
 
             grant_consent(page, base_url, citizen_name, service_name)

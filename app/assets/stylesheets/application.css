@@ -78,6 +78,25 @@ main.container { padding-top: 2rem; padding-bottom: 3rem; }
   color: #fff;
 }
 
+.nav-session {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #dbeafe;
+  font-size: 0.9rem;
+}
+
+.nav-session form { margin: 0; }
+
+.btn-nav {
+  padding: 0.3rem 0.7rem;
+  background: transparent;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.55);
+}
+
+.btn-nav:hover { background: rgba(255, 255, 255, 0.15); }
+
 /* Page header */
 .page-header {
   display: flex;
@@ -179,6 +198,7 @@ form label {
 
 form input[type="text"],
 form input[type="email"],
+form input[type="password"],
 form input[type="datetime-local"],
 form select,
 form textarea {

@@ -3,6 +3,7 @@ require "test_helper"
 class CitizensControllerTest < ActionDispatch::IntegrationTest
   setup do
     @citizen = citizens(:one)
+    sign_in_as(users(:one))
   end
 
   test "should get index" do
@@ -16,11 +17,15 @@ class CitizensControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should create citizen" do
+    user = User.create!(email_address: "new@example.com", password: "password")
+    sign_in_as(user)
+
     assert_difference("Citizen.count") do
-            post citizens_url, params: { citizen: { email: "new@example.com", name: "New Person" } }
+      post citizens_url, params: { citizen: { email: "new@example.com", name: "New Person" } }
     end
 
     assert_redirected_to citizen_url(Citizen.last)
+    assert_equal user, Citizen.last.user
   end
 
   test "should show citizen" do

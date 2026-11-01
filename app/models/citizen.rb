@@ -1,6 +1,9 @@
 class Citizen < ApplicationRecord
+  belongs_to :user
   has_many :consents, dependent: :destroy
   has_many :services, through: :consents
+
+  validates :user_id, uniqueness: true
 
   normalizes :email, with: ->(email) { email.strip.downcase }
 

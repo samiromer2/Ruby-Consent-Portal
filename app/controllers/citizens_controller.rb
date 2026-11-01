@@ -21,7 +21,7 @@ class CitizensController < ApplicationController
 
   # POST /citizens or /citizens.json
   def create
-    @citizen = Citizen.new(citizen_params)
+    @citizen = Current.user.build_citizen(citizen_params)
 
     respond_to do |format|
       if @citizen.save
