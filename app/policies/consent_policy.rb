@@ -19,12 +19,10 @@ class ConsentPolicy < ApplicationPolicy
     owner?
   end
 
-  def update?
-    owner?
-  end
-
+  # Consents are never edited: revoke and grant a new one instead.
+  # A revoked consent can't be revoked again, so its revoked_at never changes.
   def revoke?
-    owner?
+    owner? && record.active?
   end
 
   def destroy?

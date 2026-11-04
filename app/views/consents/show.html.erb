@@ -27,9 +27,6 @@
   <% if @consent.active? && policy(@consent).revoke? %>
     <%= button_to "Revoke consent", revoke_consent_path(@consent), method: :patch, class: "btn btn-warning" %>
   <% end %>
-  <% if policy(@consent).edit? %>
-    <%= link_to "Edit", edit_consent_path(@consent), class: "btn" %>
-  <% end %>
   <%= link_to "Back to consents", consents_path, class: "btn btn-secondary" %>
   <% if policy(@consent).destroy? %>
     <%= button_to "Delete", @consent, method: :delete, class: "btn btn-danger", data: { turbo_confirm: "Are you sure?" } %>

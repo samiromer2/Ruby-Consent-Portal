@@ -73,6 +73,7 @@ Goal: a permanent record of who granted or revoked each consent, and when.
 - [x] Record events from the controller and from `ExpireStaleConsentsJob` (actor = system).
 - [x] Show a timeline of events on the consent page.
 - [x] Tests: granting, revoking and expiring each write exactly one event.
+- [x] Close the gaps found in review: a revoked consent can't be revoked again (it overwrote `revoked_at` and wrote a second event), and consents can't be edited at all (changing the service left no event).
 
 Done when: every change to a consent leaves an event, including ones made by the job.
 

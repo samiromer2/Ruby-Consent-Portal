@@ -80,39 +80,39 @@ class ConsentsControllerTest < ActionDispatch::IntegrationTest
     assert_match "by #{users(:one).email_address}", response.body
   end
 
+  test "cannot revoke a consent twice" do
+    sign_in_as(users(:two))
+    consent = consents(:revoked)
+    revoked_at = consent.revoked_at
+
+    assert_no_difference("ConsentEvent.count") do
+      patch revoke_consent_url(consent)
+    end
+
+    assert_redirected_to root_url
+    assert_equal revoked_at.to_i, consent.reload.revoked_at.to_i
+  end
+
   test "should show consent" do
     get consent_url(@consent)
     assert_response :success
     assert_match "No history yet.", response.body
   end
 
-  test "should get edit" do
-    get edit_consent_url(@consent)
-    assert_response :success
-  end
-
-  test "should update consent" do
-    patch consent_url(@consent), params: { consent: { citizen_id: @consent.citizen_id, service_id: @consent.service_id } }
-    assert_redirected_to consent_url(@consent)
-  end
-
-  test "patch cannot change revoked_at or granted_at" do
+  test "consents cannot be edited" do
     sign_in_as(users(:two))
     consent = consents(:revoked)
+    service_id = consent.service_id
     granted_at = consent.granted_at
     revoked_at = consent.revoked_at
 
     patch consent_url(consent), params: {
-      consent: {
-        citizen_id: consent.citizen_id,
-        service_id: consent.service_id,
-        granted_at: 5.years.ago,
-        revoked_at: ""
-      }
+      consent: { service_id: services(:one).id, granted_at: 5.years.ago, revoked_at: "" }
     }
 
-    assert_redirected_to consent_url(consent)
+    assert_response :not_found
     consent.reload
+    assert_equal service_id, consent.service_id
     assert_equal granted_at.to_i, consent.granted_at.to_i
     assert_equal revoked_at.to_i, consent.revoked_at.to_i
   end

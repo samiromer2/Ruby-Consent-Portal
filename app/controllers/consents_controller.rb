@@ -1,5 +1,5 @@
 class ConsentsController < ApplicationController
-  before_action :set_consent, only: %i[ show edit update destroy revoke ]
+  before_action :set_consent, only: %i[ show destroy revoke ]
 
   # GET /consents or /consents.json
   def index
@@ -15,10 +15,6 @@ class ConsentsController < ApplicationController
   def new
     @consent = Consent.new(citizen: Current.user.citizen)
     authorize @consent
-  end
-
-  # GET /consents/1/edit
-  def edit
   end
 
   # POST /consents or /consents.json
@@ -41,19 +37,6 @@ class ConsentsController < ApplicationController
         format.json { render :show, status: :created, location: @consent }
       else
         format.html { render :new, status: :unprocessable_content }
-        format.json { render json: @consent.errors, status: :unprocessable_content }
-      end
-    end
-  end
-
-  # PATCH/PUT /consents/1 or /consents/1.json
-  def update
-    respond_to do |format|
-      if @consent.update(consent_params)
-        format.html { redirect_to @consent, notice: "Consent was successfully updated.", status: :see_other }
-        format.json { render :show, status: :ok, location: @consent }
-      else
-        format.html { render :edit, status: :unprocessable_content }
         format.json { render json: @consent.errors, status: :unprocessable_content }
       end
     end

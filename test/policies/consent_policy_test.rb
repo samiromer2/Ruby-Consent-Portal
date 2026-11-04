@@ -26,6 +26,15 @@ class ConsentPolicyTest < ActiveSupport::TestCase
     assert ConsentPolicy.new(@alice, @own).revoke?
   end
 
+  test "a revoked consent cannot be revoked again, even by its owner" do
+    assert_not ConsentPolicy.new(users(:two), consents(:revoked)).revoke?
+  end
+
+  test "nobody can edit a consent" do
+    assert_not ConsentPolicy.new(@alice, @own).update?
+    assert_not ConsentPolicy.new(@admin, @own).update?
+  end
+
   test "a citizen cannot show or revoke someone else's consent" do
     policy = ConsentPolicy.new(@alice, @other)
 
