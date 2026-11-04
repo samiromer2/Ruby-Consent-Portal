@@ -69,10 +69,10 @@ Learning: authorization vs authentication, policy objects, `enum`, scoping queri
 
 Goal: a permanent record of who granted or revoked each consent, and when.
 
-- [ ] New model `ConsentEvent` (`consent_id`, `user_id`, `action`: granted/revoked/expired, `created_at`), never edited or deleted.
-- [ ] Record events from the controller and from `ExpireStaleConsentsJob` (actor = system).
-- [ ] Show a timeline of events on the consent page.
-- [ ] Tests: granting, revoking and expiring each write exactly one event.
+- [x] New model `ConsentEvent` (`consent_id`, `user_id`, `action`: granted/revoked/expired, `created_at`), never edited or deleted.
+- [x] Record events from the controller and from `ExpireStaleConsentsJob` (actor = system).
+- [x] Show a timeline of events on the consent page.
+- [x] Tests: granting, revoking and expiring each write exactly one event.
 
 Done when: every change to a consent leaves an event, including ones made by the job.
 

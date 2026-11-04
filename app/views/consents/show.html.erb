@@ -6,6 +6,23 @@
   <%= render @consent %>
 </div>
 
+<section class="timeline">
+  <h2>History</h2>
+  <% if @events.any? %>
+    <ol>
+      <% @events.each do |event| %>
+        <li>
+          <strong><%= event.action.humanize %></strong>
+          by <%= event.actor_name %>
+          <div class="muted"><%= l event.created_at, format: :long %></div>
+        </li>
+      <% end %>
+    </ol>
+  <% else %>
+    <p class="empty">No history yet.</p>
+  <% end %>
+</section>
+
 <div class="actions">
   <% if @consent.active? && policy(@consent).revoke? %>
     <%= button_to "Revoke consent", revoke_consent_path(@consent), method: :patch, class: "btn btn-warning" %>

@@ -8,6 +8,7 @@ class ConsentsController < ApplicationController
 
   # GET /consents/1 or /consents/1.json
   def show
+    @events = @consent.consent_events.includes(:user).order(:created_at)
   end
 
   # GET /consents/new
@@ -26,8 +27,16 @@ class ConsentsController < ApplicationController
     @consent.citizen = Current.user.citizen
     authorize @consent
 
+    saved = false
+    Consent.transaction do
+      saved = @consent.save
+      raise ActiveRecord::Rollback unless saved
+
+      @consent.consent_events.create!(action: :granted, user: Current.user)
+    end
+
     respond_to do |format|
-      if @consent.save
+      if saved
         format.html { redirect_to @consent, notice: "Consent was successfully created." }
         format.json { render :show, status: :created, location: @consent }
       else
@@ -58,10 +67,15 @@ class ConsentsController < ApplicationController
       format.html { redirect_to consents_path, notice: "Consent was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
     end
+  rescue ActiveRecord::DeleteRestrictionError
+    respond_to do |format|
+      format.html { redirect_to @consent, alert: "A consent with history cannot be deleted." }
+      format.json { head :conflict }
+    end
   end
 
   def revoke
-    @consent.revoke!
+    ::Consents::Revoke.call(consent: @consent, user: Current.user)
     redirect_to @consent, notice: "Consent revoked."
   end
 

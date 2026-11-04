@@ -27,11 +27,16 @@ class ConsentsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create consent for the signed-in citizen" do
     service = Service.create!(name: "New Service")
-    assert_difference("Consent.count") do
+    assert_difference([ "Consent.count", "ConsentEvent.count" ], 1) do
       post consents_url, params: { consent: { citizen_id: citizens(:two).id, service_id: service.id } }
     end
-    assert_redirected_to consent_url(Consent.last)
-    assert_equal users(:one).citizen, Consent.last.citizen
+    consent = Consent.last
+    assert_redirected_to consent_url(consent)
+    assert_equal users(:one).citizen, consent.citizen
+
+    event = consent.consent_events.sole
+    assert event.granted?
+    assert_equal users(:one), event.user
   end
 
   test "index lists only the signed-in citizen's consents" do
@@ -61,14 +66,24 @@ class ConsentsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should revoke consent" do
-    patch revoke_consent_url(@consent)
+    assert_difference("ConsentEvent.count", 1) do
+      patch revoke_consent_url(@consent)
+    end
     assert_redirected_to consent_url(@consent)
     assert_not_nil @consent.reload.revoked_at
+
+    event = @consent.consent_events.sole
+    assert event.revoked?
+    assert_equal users(:one), event.user
+
+    follow_redirect!
+    assert_match "by #{users(:one).email_address}", response.body
   end
 
   test "should show consent" do
     get consent_url(@consent)
     assert_response :success
+    assert_match "No history yet.", response.body
   end
 
   test "should get edit" do
@@ -108,5 +123,16 @@ class ConsentsControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_redirected_to consents_url
+  end
+
+  test "cannot delete a consent that has history" do
+    @consent.consent_events.create!(action: :granted, user: users(:one))
+
+    assert_no_difference([ "Consent.count", "ConsentEvent.count" ]) do
+      delete consent_url(@consent)
+    end
+
+    assert_redirected_to consent_url(@consent)
+    assert_equal "A consent with history cannot be deleted.", flash[:alert]
   end
 end

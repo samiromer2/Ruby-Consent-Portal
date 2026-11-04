@@ -57,6 +57,11 @@ class CitizensController < ApplicationController
       format.html { redirect_to citizens_path, notice: "Citizen was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
     end
+  rescue ActiveRecord::DeleteRestrictionError
+    respond_to do |format|
+      format.html { redirect_to @citizen, alert: "A citizen with consent history cannot be deleted." }
+      format.json { head :conflict }
+    end
   end
 
   private

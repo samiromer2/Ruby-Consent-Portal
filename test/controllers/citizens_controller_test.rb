@@ -67,6 +67,18 @@ class CitizensControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to citizens_url
   end
 
+  test "admin cannot destroy a citizen whose consent has history" do
+    sign_in_as(users(:admin))
+    consents(:old).consent_events.create!(action: :expired)
+
+    assert_no_difference([ "Citizen.count", "Consent.count", "ConsentEvent.count" ]) do
+      delete citizen_url(citizens(:two))
+    end
+
+    assert_redirected_to citizen_url(citizens(:two))
+    assert_equal "A citizen with consent history cannot be deleted.", flash[:alert]
+  end
+
   test "citizen cannot destroy their record" do
     assert_no_difference("Citizen.count") do
       delete citizen_url(@citizen)

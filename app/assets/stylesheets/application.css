@@ -234,6 +234,30 @@ form textarea { min-height: 100px; }
 .errors h2 { font-size: 1rem; margin: 0 0 0.5rem; }
 .errors ul { margin: 0; padding-left: 1.25rem; }
 
+/* Consent history */
+.timeline {
+  margin-top: 1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem;
+}
+
+.timeline h2 { font-size: 1.1rem; margin: 0 0 0.75rem; }
+
+.timeline ol {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.timeline li {
+  padding-left: 0.9rem;
+  border-left: 3px solid var(--primary);
+}
+
 @media (max-width: 560px) {
   .card { flex-direction: column; align-items: flex-start; }
 }

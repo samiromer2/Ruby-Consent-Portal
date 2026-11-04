@@ -57,6 +57,11 @@ class ServicesController < ApplicationController
       format.html { redirect_to services_path, notice: "Service was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
     end
+  rescue ActiveRecord::DeleteRestrictionError
+    respond_to do |format|
+      format.html { redirect_to @service, alert: "A service with consent history cannot be deleted." }
+      format.json { head :conflict }
+    end
   end
 
   private

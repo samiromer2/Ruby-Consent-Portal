@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_11_04_070000) do
+ActiveRecord::Schema[8.1].define(version: 2026_11_04_080100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -23,6 +23,15 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_04_070000) do
     t.bigint "user_id", null: false
     t.index ["email"], name: "index_citizens_on_email", unique: true
     t.index ["user_id"], name: "index_citizens_on_user_id", unique: true
+  end
+
+  create_table "consent_events", force: :cascade do |t|
+    t.bigint "consent_id", null: false
+    t.bigint "user_id"
+    t.string "action", null: false
+    t.datetime "created_at", null: false
+    t.index ["consent_id", "created_at"], name: "index_consent_events_on_consent_id_and_created_at"
+    t.index ["user_id"], name: "index_consent_events_on_user_id"
   end
 
   create_table "consents", force: :cascade do |t|
@@ -64,6 +73,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_11_04_070000) do
   end
 
   add_foreign_key "citizens", "users"
+  add_foreign_key "consent_events", "consents"
+  add_foreign_key "consent_events", "users"
   add_foreign_key "consents", "citizens"
   add_foreign_key "consents", "services"
   add_foreign_key "sessions", "users"

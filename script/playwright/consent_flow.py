@@ -5,8 +5,8 @@ Walks through the main user journey in a real browser:
   2. sign up (this creates the citizen linked to the account)
   3. grant consent to that service
   4. try to grant the same consent again and expect it to be blocked
-  5. revoke the consent and check the "Revoked" badge
-  6. sign back in as the admin and delete the test data (unless --keep is passed)
+  5. revoke the consent, check the "Revoked" badge, and check the history
+  6. sign back in as the admin and confirm history blocks deleting the test data
 
 The admin account comes from `bin/rails db:seed` (admin@example.com / password).
 
@@ -108,13 +108,14 @@ def revoke_consent(page: Page, consent_url: str) -> None:
     expect(page.locator(".flash.notice")).to_have_text("Consent revoked.")
     expect(page.locator(".badge-revoked")).to_be_visible()
     expect(page.get_by_role("button", name="Revoke consent")).to_have_count(0)
+    expect(page.locator(".timeline")).to_contain_text("Revoked by")
     screenshot(page, "5_consent_revoked")
 
 
-def delete_record(page: Page, url: str) -> None:
+def history_blocks_delete(page: Page, url: str, message: str) -> None:
     page.goto(url)
     page.get_by_role("button", name="Delete").click()
-    expect(page.locator(".flash.notice")).to_contain_text("successfully destroyed")
+    expect(page.locator(".flash.alert")).to_have_text(message)
 
 
 def run(base_url: str, headed: bool, slow_mo: int, keep: bool) -> None:
@@ -144,12 +145,13 @@ def run(base_url: str, headed: bool, slow_mo: int, keep: bool) -> None:
             if keep:
                 step("Keeping test data (--keep)")
             else:
-                # Citizen and Service both use dependent: :destroy, so the consent goes too.
-                step("Cleaning up test data")
+                # History is append-only, so the citizen, consent, and service stay.
+                step("Confirming consent history cannot be deleted")
                 sign_out(page)
                 sign_in(page, base_url, "admin@example.com")
-                delete_record(page, citizen_url)
-                delete_record(page, service_url)
+                history_blocks_delete(page, citizen_url, "A citizen with consent history cannot be deleted.")
+                history_blocks_delete(page, service_url, "A service with consent history cannot be deleted.")
+                history_blocks_delete(page, consent_url, "A consent with history cannot be deleted.")
         except Exception:
             screenshot(page, "failure")
             print(f"✗ Failed on {page.url}. See {SCREENSHOT_DIR / 'failure.png'}", file=sys.stderr)
