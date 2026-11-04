@@ -1,12 +1,14 @@
 """End-to-end smoke test for the Consent Portal, driven by Playwright.
 
 Walks through the main user journey in a real browser:
-  1. sign up (this creates the citizen linked to the account)
-  2. create a service
-  3. grant consent (citizen -> service)
+  1. sign in as the seeded admin and create a service
+  2. sign up (this creates the citizen linked to the account)
+  3. grant consent to that service
   4. try to grant the same consent again and expect it to be blocked
-  5. revoke the consent and check the "Revoked" badge
-  6. delete the test data again (unless --keep is passed)
+  5. revoke the consent, check the "Revoked" badge, and check the history
+  6. sign back in as the admin and confirm history blocks deleting the test data
+
+The admin account comes from `bin/rails db:seed` (admin@example.com / password).
 
 Run it against a local server (bin/rails server):
     python script/playwright/consent_flow.py
@@ -30,6 +32,20 @@ def step(message: str) -> None:
 def screenshot(page: Page, name: str) -> None:
     SCREENSHOT_DIR.mkdir(exist_ok=True)
     page.screenshot(path=SCREENSHOT_DIR / f"{name}.png", full_page=True)
+
+
+def sign_in(page: Page, base_url: str, email: str) -> None:
+    step(f"Signing in {email}")
+    page.goto(f"{base_url}/session/new")
+    page.get_by_label("Email address").fill(email)
+    page.get_by_label("Password", exact=True).fill("password")
+    page.get_by_role("button", name="Sign in").click()
+    expect(page.get_by_role("button", name="Sign out")).to_be_visible()
+
+
+def sign_out(page: Page) -> None:
+    page.get_by_role("button", name="Sign out").click()
+    expect(page.get_by_role("heading", name="Sign in")).to_be_visible()
 
 
 def sign_up(page: Page, base_url: str, name: str, email: str) -> str:
@@ -61,16 +77,15 @@ def create_service(page: Page, base_url: str, name: str) -> str:
     return page.url
 
 
-def submit_consent(page: Page, base_url: str, citizen: str, service: str) -> None:
+def submit_consent(page: Page, base_url: str, service: str) -> None:
     page.goto(f"{base_url}/consents/new")
-    page.get_by_label("Citizen").select_option(label=citizen)
     page.get_by_label("Service").select_option(label=service)
     page.get_by_role("button", name="Create Consent").click()
 
 
 def grant_consent(page: Page, base_url: str, citizen: str, service: str) -> None:
     step(f"Granting consent: {citizen} → {service}")
-    submit_consent(page, base_url, citizen, service)
+    submit_consent(page, base_url, service)
 
     expect(page.locator(".flash.notice")).to_have_text("Consent was successfully created.")
     expect(page.locator(".badge-active")).to_be_visible()
@@ -79,7 +94,7 @@ def grant_consent(page: Page, base_url: str, citizen: str, service: str) -> None
 
 def duplicate_consent_is_blocked(page: Page, base_url: str, citizen: str, service: str) -> None:
     step("Trying to grant the same consent twice (should be blocked)")
-    submit_consent(page, base_url, citizen, service)
+    submit_consent(page, base_url, service)
 
     expect(page.locator(".errors")).to_contain_text("already has consent from this citizen")
     screenshot(page, "4_duplicate_blocked")
@@ -93,13 +108,14 @@ def revoke_consent(page: Page, consent_url: str) -> None:
     expect(page.locator(".flash.notice")).to_have_text("Consent revoked.")
     expect(page.locator(".badge-revoked")).to_be_visible()
     expect(page.get_by_role("button", name="Revoke consent")).to_have_count(0)
+    expect(page.locator(".timeline")).to_contain_text("Revoked by")
     screenshot(page, "5_consent_revoked")
 
 
-def delete_record(page: Page, url: str) -> None:
+def history_blocks_delete(page: Page, url: str, message: str) -> None:
     page.goto(url)
     page.get_by_role("button", name="Delete").click()
-    expect(page.locator(".flash.notice")).to_contain_text("successfully destroyed")
+    expect(page.locator(".flash.alert")).to_have_text(message)
 
 
 def run(base_url: str, headed: bool, slow_mo: int, keep: bool) -> None:
@@ -115,9 +131,11 @@ def run(base_url: str, headed: bool, slow_mo: int, keep: bool) -> None:
         page.on("dialog", lambda dialog: dialog.accept())
 
         try:
-            citizen_url = sign_up(page, base_url, citizen_name, citizen_email)
+            sign_in(page, base_url, "admin@example.com")
             service_url = create_service(page, base_url, service_name)
+            sign_out(page)
 
+            citizen_url = sign_up(page, base_url, citizen_name, citizen_email)
             grant_consent(page, base_url, citizen_name, service_name)
             consent_url = page.url
 
@@ -127,10 +145,13 @@ def run(base_url: str, headed: bool, slow_mo: int, keep: bool) -> None:
             if keep:
                 step("Keeping test data (--keep)")
             else:
-                # Citizen and Service both use dependent: :destroy, so the consent goes too.
-                step("Cleaning up test data")
-                delete_record(page, citizen_url)
-                delete_record(page, service_url)
+                # History is append-only, so the citizen, consent, and service stay.
+                step("Confirming consent history cannot be deleted")
+                sign_out(page)
+                sign_in(page, base_url, "admin@example.com")
+                history_blocks_delete(page, citizen_url, "A citizen with consent history cannot be deleted.")
+                history_blocks_delete(page, service_url, "A service with consent history cannot be deleted.")
+                history_blocks_delete(page, consent_url, "A consent with history cannot be deleted.")
         except Exception:
             screenshot(page, "failure")
             print(f"✗ Failed on {page.url}. See {SCREENSHOT_DIR / 'failure.png'}", file=sys.stderr)

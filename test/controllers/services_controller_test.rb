@@ -3,7 +3,7 @@ require "test_helper"
 class ServicesControllerTest < ActionDispatch::IntegrationTest
   setup do
     @service = services(:one)
-    sign_in_as(users(:one))
+    sign_in_as(users(:admin))
   end
 
   test "should get index" do
@@ -22,6 +22,16 @@ class ServicesControllerTest < ActionDispatch::IntegrationTest
     end
 
     assert_redirected_to service_url(Service.last)
+  end
+
+  test "citizen cannot create a service" do
+    sign_in_as(users(:one))
+
+    assert_no_difference("Service.count") do
+      post services_url, params: { service: { name: "Blocked", description: "no" } }
+    end
+
+    assert_redirected_to root_url
   end
 
   test "should show service" do

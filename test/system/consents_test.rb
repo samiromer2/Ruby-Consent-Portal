@@ -13,11 +13,14 @@ class ConsentsTest < ApplicationSystemTestCase
 
     visit consent_url(consent)
     assert_selector ".badge-active", text: "Active"
+    assert_text "No history yet."
 
-    click_on "Revoke consent"
+    # Selenium's click does not activate this submit button under the current headless Chrome.
+    find_button("Revoke consent").execute_script("this.form.requestSubmit(this)")
 
     assert_text "Consent revoked."
     assert_selector ".badge-revoked", text: "Revoked"
+    assert_text "Revoked by #{user.email_address}"
     assert_no_button "Revoke consent"
     assert_not_nil consent.reload.revoked_at
   end

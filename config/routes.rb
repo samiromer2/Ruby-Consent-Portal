@@ -6,7 +6,7 @@ Rails.application.routes.draw do
 
   resources :citizens
   resources :services
-  resources :consents do
+  resources :consents, except: %i[ edit update ] do
     member do
       patch :revoke
     end

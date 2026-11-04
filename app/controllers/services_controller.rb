@@ -3,7 +3,7 @@ class ServicesController < ApplicationController
 
   # GET /services or /services.json
   def index
-    @services = Service.all
+    @services = policy_scope(Service).order(:name)
   end
 
   # GET /services/1 or /services/1.json
@@ -13,6 +13,7 @@ class ServicesController < ApplicationController
   # GET /services/new
   def new
     @service = Service.new
+    authorize @service
   end
 
   # GET /services/1/edit
@@ -22,6 +23,7 @@ class ServicesController < ApplicationController
   # POST /services or /services.json
   def create
     @service = Service.new(service_params)
+    authorize @service
 
     respond_to do |format|
       if @service.save
@@ -55,12 +57,18 @@ class ServicesController < ApplicationController
       format.html { redirect_to services_path, notice: "Service was successfully destroyed.", status: :see_other }
       format.json { head :no_content }
     end
+  rescue ActiveRecord::DeleteRestrictionError
+    respond_to do |format|
+      format.html { redirect_to @service, alert: "A service with consent history cannot be deleted." }
+      format.json { head :conflict }
+    end
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_service
       @service = Service.find(params.expect(:id))
+      authorize @service
     end
 
     # Only allow a list of trusted parameters through.

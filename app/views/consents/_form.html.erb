@@ -12,11 +12,6 @@
   <% end %>
 
   <div class="field">
-    <%= form.label :citizen_id, "Citizen" %>
-    <%= form.collection_select :citizen_id, Citizen.order(:name), :id, :name, prompt: "Choose a citizen" %>
-  </div>
-
-  <div class="field">
     <%= form.label :service_id, "Service" %>
     <%= form.collection_select :service_id, Service.order(:name), :id, :name, prompt: "Choose a service" %>
   </div>

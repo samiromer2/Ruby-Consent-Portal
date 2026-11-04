@@ -54,12 +54,12 @@ Learning: `has_secure_password`, sessions and cookies, `before_action`, `Current
 
 Goal: citizens only see and change their own consents; admins manage services.
 
-- [ ] Add a `role` to users (`citizen`, `admin`) with a Rails `enum`.
-- [ ] Add Pundit, with policies for `Consent`, `Service` and `Citizen`.
-- [ ] Citizens: see only their own consents, grant and revoke only their own.
-- [ ] Admins: create/edit/delete services, see all consents, set `verified` on citizens (the only place that's allowed).
-- [ ] Scope the consent form: a citizen picks only a service, the citizen is `Current.user.citizen`.
-- [ ] Policy tests, plus a controller test proving a citizen gets 403/redirect on someone else's consent.
+- [x] Add a `role` to users (`citizen`, `admin`) with a Rails `enum`.
+- [x] Add Pundit, with policies for `Consent`, `Service` and `Citizen`.
+- [x] Citizens: see only their own consents, grant and revoke only their own.
+- [x] Admins: create/edit/delete services, see all consents, set `verified` on citizens (the only place that's allowed).
+- [x] Scope the consent form: a citizen picks only a service, the citizen is `Current.user.citizen`.
+- [x] Policy tests, plus a controller test proving a citizen gets 403/redirect on someone else's consent.
 
 Done when: one citizen can't see or touch another citizen's data, proven by tests.
 
@@ -69,10 +69,11 @@ Learning: authorization vs authentication, policy objects, `enum`, scoping queri
 
 Goal: a permanent record of who granted or revoked each consent, and when.
 
-- [ ] New model `ConsentEvent` (`consent_id`, `user_id`, `action`: granted/revoked/expired, `created_at`), never edited or deleted.
-- [ ] Record events from the controller and from `ExpireStaleConsentsJob` (actor = system).
-- [ ] Show a timeline of events on the consent page.
-- [ ] Tests: granting, revoking and expiring each write exactly one event.
+- [x] New model `ConsentEvent` (`consent_id`, `user_id`, `action`: granted/revoked/expired, `created_at`), never edited or deleted.
+- [x] Record events from the controller and from `ExpireStaleConsentsJob` (actor = system).
+- [x] Show a timeline of events on the consent page.
+- [x] Tests: granting, revoking and expiring each write exactly one event.
+- [x] Close the gaps found in review: a revoked consent can't be revoked again (it overwrote `revoked_at` and wrote a second event), and consents can't be edited at all (changing the service left no event).
 
 Done when: every change to a consent leaves an event, including ones made by the job.
 

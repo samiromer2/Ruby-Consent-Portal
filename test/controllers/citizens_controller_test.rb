@@ -11,21 +11,35 @@ class CitizensControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "should get new" do
-    get new_citizen_url
+  test "should get index of only the signed-in citizen" do
+    get citizens_url
     assert_response :success
+    assert_match "Alice", response.body
+    assert_no_match "Bob", response.body
   end
 
-  test "should create citizen" do
-    user = User.create!(email_address: "new@example.com", password: "password")
-    sign_in_as(user)
+  test "cannot open another citizen" do
+    get citizen_url(citizens(:two))
+    assert_redirected_to root_url
+  end
 
-    assert_difference("Citizen.count") do
-      post citizens_url, params: { citizen: { email: "new@example.com", name: "New Person" } }
-    end
+  test "cannot verify themselves" do
+    sign_in_as(users(:two))
+    patch citizen_url(citizens(:two)), params: {
+      citizen: { name: "Bob Singh", email: "bob@example.com", verified: true }
+    }
 
-    assert_redirected_to citizen_url(Citizen.last)
-    assert_equal user, Citizen.last.user
+    assert_redirected_to citizen_url(citizens(:two))
+    assert_not citizens(:two).reload.verified
+  end
+
+  test "admin can verify a citizen" do
+    sign_in_as(users(:admin))
+    patch citizen_url(citizens(:two)), params: {
+      citizen: { name: "Bob Singh", email: "bob@example.com", verified: true }
+    }
+
+    assert citizens(:two).reload.verified
   end
 
   test "should show citizen" do
@@ -44,10 +58,32 @@ class CitizensControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should destroy citizen" do
+    sign_in_as(users(:admin))
+
     assert_difference("Citizen.count", -1) do
-      delete citizen_url(@citizen)
+      delete citizen_url(citizens(:two))
     end
 
     assert_redirected_to citizens_url
+  end
+
+  test "admin cannot destroy a citizen whose consent has history" do
+    sign_in_as(users(:admin))
+    consents(:old).consent_events.create!(action: :expired)
+
+    assert_no_difference([ "Citizen.count", "Consent.count", "ConsentEvent.count" ]) do
+      delete citizen_url(citizens(:two))
+    end
+
+    assert_redirected_to citizen_url(citizens(:two))
+    assert_equal "A citizen with consent history cannot be deleted.", flash[:alert]
+  end
+
+  test "citizen cannot destroy their record" do
+    assert_no_difference("Citizen.count") do
+      delete citizen_url(@citizen)
+    end
+
+    assert_redirected_to root_url
   end
 end

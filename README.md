@@ -72,7 +72,7 @@ bin/rails test:system    # browser tests in headless Chrome
 
 ### End-to-end smoke test (Playwright, Python)
 
-`script/playwright/consent_flow.py` drives the running app in Chromium. It creates a citizen and a service, grants consent, checks that a duplicate is blocked, revokes the consent, then deletes its test data.
+`script/playwright/consent_flow.py` drives the running app in Chromium. It creates a citizen and a service, grants consent, checks that a duplicate is blocked, revokes the consent, and checks that the history cannot be deleted.
 
 ```bash
 cd script/playwright

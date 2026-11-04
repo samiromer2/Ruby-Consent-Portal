@@ -1,7 +1,12 @@
 class ExpireStaleConsentsJob < ApplicationJob
   queue_as :default
 
-  def perform(*args)
-     Consent.active.where(granted_at: ...1.year.ago).find_each(&:revoke!)
+  def perform
+    Consent.active.where(granted_at: ...1.year.ago).find_each do |consent|
+      consent.transaction do
+        consent.revoke!
+        consent.consent_events.create!(action: :expired)
+      end
+    end
   end
 end
