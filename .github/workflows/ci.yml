@@ -102,7 +102,7 @@ jobs:
           DATABASE_URL: postgres://postgres:postgres@localhost:5432
           # RAILS_MASTER_KEY: ${{ secrets.RAILS_MASTER_KEY }}
           # REDIS_URL: redis://localhost:6379/0
-        run: bin/rails db:test:prepare test
+        run: bin/rails db:test:prepare test && bundle exec rspec
 
   system-test:
     runs-on: ubuntu-latest
@@ -149,4 +149,57 @@ jobs:
         with:
           name: screenshots
           path: ${{ github.workspace }}/tmp/screenshots
+          if-no-files-found: ignore
+
+  smoke:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: --health-cmd="pg_isready" --health-interval=10s --health-timeout=5s --health-retries=3
+
+    steps:
+      - name: Install packages
+        run: sudo apt-get update && sudo apt-get install --no-install-recommends -y libpq-dev python3-venv
+
+      - name: Checkout code
+        uses: actions/checkout@v7
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Install Playwright
+        run: |
+          python3 -m venv script/playwright/.venv
+          script/playwright/.venv/bin/pip install -r script/playwright/requirements.txt
+          script/playwright/.venv/bin/playwright install --with-deps chromium
+
+      - name: Seed, boot, and run the smoke test
+        env:
+          RAILS_ENV: test
+          DATABASE_URL: postgres://postgres:postgres@localhost:5432
+        run: |
+          bin/rails db:test:prepare db:seed
+          bin/rails server -p 3000 -b 127.0.0.1 &
+          for _ in $(seq 1 30); do
+            curl -sf http://127.0.0.1:3000/up && break
+            sleep 1
+          done
+          curl -sf http://127.0.0.1:3000/up
+          script/playwright/.venv/bin/python script/playwright/consent_flow.py --base-url http://127.0.0.1:3000
+
+      - name: Keep screenshots from a failed smoke test
+        uses: actions/upload-artifact@v7
+        if: failure()
+        with:
+          name: playwright-screenshots
+          path: script/playwright/screenshots
           if-no-files-found: ignore

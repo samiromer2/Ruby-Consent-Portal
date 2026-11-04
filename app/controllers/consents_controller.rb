@@ -1,9 +1,13 @@
 class ConsentsController < ApplicationController
+  include ConsentListing
+
   before_action :set_consent, only: %i[ show destroy revoke ]
 
   # GET /consents or /consents.json
   def index
-    @consents = policy_scope(Consent).includes(:citizen, :service).order(granted_at: :desc)
+    load_consent_page
+  rescue Pagy::OverflowError
+    redirect_to consents_path(request.query_parameters.merge(page: 1))
   end
 
   # GET /consents/1 or /consents/1.json
@@ -31,35 +35,28 @@ class ConsentsController < ApplicationController
       @consent.consent_events.create!(action: :granted, user: Current.user)
     end
 
-    respond_to do |format|
-      if saved
-        format.html { redirect_to @consent, notice: "Consent was successfully created." }
-        format.json { render :show, status: :created, location: @consent }
-      else
-        format.html { render :new, status: :unprocessable_content }
-        format.json { render json: @consent.errors, status: :unprocessable_content }
-      end
+    if saved
+      redirect_to @consent, notice: "Consent was successfully created."
+    else
+      render :new, status: :unprocessable_content
     end
   end
 
   # DELETE /consents/1 or /consents/1.json
   def destroy
     @consent.destroy!
-
-    respond_to do |format|
-      format.html { redirect_to consents_path, notice: "Consent was successfully destroyed.", status: :see_other }
-      format.json { head :no_content }
-    end
+    redirect_to consents_path, notice: "Consent was successfully destroyed.", status: :see_other
   rescue ActiveRecord::DeleteRestrictionError
-    respond_to do |format|
-      format.html { redirect_to @consent, alert: "A consent with history cannot be deleted." }
-      format.json { head :conflict }
-    end
+    redirect_to @consent, alert: "A consent with history cannot be deleted."
   end
 
   def revoke
     ::Consents::Revoke.call(consent: @consent, user: Current.user)
-    redirect_to @consent, notice: "Consent revoked."
+
+    respond_to do |format|
+      format.turbo_stream
+      format.html { redirect_to @consent, notice: "Consent revoked." }
+    end
   end
 
   private

@@ -1,0 +1,16 @@
+<section class="timeline" id="consent_history">
+  <h2>History</h2>
+  <% if events.any? %>
+    <ol>
+      <% events.each do |event| %>
+        <li>
+          <strong><%= event.action.humanize %></strong>
+          by <%= event.actor_name %>
+          <div class="muted"><%= l event.created_at, format: :long %></div>
+        </li>
+      <% end %>
+    </ol>
+  <% else %>
+    <p class="empty">No history yet.</p>
+  <% end %>
+</section>

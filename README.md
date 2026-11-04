@@ -50,6 +50,25 @@ bin/setup
 
 `bin/setup` installs the gems, creates and migrates the database, and starts the server. Then open http://localhost:3000.
 
+Load the demo accounts with `bin/rails db:seed`:
+
+| Email | Password | What you can do |
+|---|---|---|
+| `admin@example.com` | `password` | See every consent and manage services |
+| `citizen@example.com` | `password` | See and revoke that citizen's consents |
+
+The password is for a local demo. Change it before the app is reachable on a public server.
+
+## Deploy
+
+The app is set up for [Kamal](https://kamal-deploy.org/). `config/deploy.yml` still points at the placeholder host `192.168.0.1`. There is no public URL yet.
+
+Before the first deploy, replace that host, set `APP_HOST` to the real hostname, and provide `RAILS_MASTER_KEY` and `CONSENT_PORTAL_DATABASE_PASSWORD`. Production uses four PostgreSQL databases (primary, cache, queue, and cable). Solid Queue runs inside Puma (`SOLID_QUEUE_IN_PUMA`). Then:
+
+```bash
+bin/kamal setup
+```
+
 To start the server again later:
 
 ```bash
@@ -61,7 +80,12 @@ bin/rails server
 ```bash
 bin/rails test           # model, controller, integration and job tests
 bin/rails test:system    # browser tests in headless Chrome
+bundle exec rspec        # one Consent example, using FactoryBot
 ```
+
+`bin/rails test` writes a coverage report to `coverage/index.html`.
+
+CI also runs `script/playwright/consent_flow.py` against a booted server.
 
 | Kind | Where | What it covers |
 |---|---|---|
@@ -102,21 +126,41 @@ Run the expiry job by hand from the console:
 bin/rails runner "ExpireStaleConsentsJob.perform_now"
 ```
 
-It isn't scheduled yet. In production it would run nightly as a Solid Queue recurring job, configured in `config/recurring.yml`.
+In production it runs nightly at 3am as a Solid Queue recurring job (`config/recurring.yml`).
+
+## JSON API
+
+Other systems can read and revoke consents at `/api/v1`. Send the user's token in the `Authorization` header. A user receives a token when the account is created. Read one from the console with `User.find_by!(email_address: "admin@example.com").api_token`.
+
+```bash
+curl -H "Authorization: Bearer $TOKEN" http://localhost:3000/api/v1/consents
+curl -H "Authorization: Bearer $TOKEN" http://localhost:3000/api/v1/consents/1
+curl -X PATCH -H "Authorization: Bearer $TOKEN" http://localhost:3000/api/v1/consents/1/revoke
+```
+
+| Request | Who | Result |
+|---|---|---|
+| `GET /api/v1/consents` | Citizen | That citizen's consents |
+| `GET /api/v1/consents` | Admin | Every consent |
+| `GET /api/v1/consents/:id` | Owner or admin | One consent |
+| `PATCH /api/v1/consents/:id/revoke` | Owner of an active consent | Sets `revoked_at` and writes a revoked event |
+
+A missing or unknown token returns `401`. A signed-in client who is not allowed to see or revoke that consent returns `403`.
 
 ## Data model
 
 ```
 Citizen ──< Consent >── Service
+User ── Citizen
 
+users      email_address, role (citizen or admin), api_token
 citizens   name, email (unique), verified
 services   name, description
 consents   citizen_id, service_id (unique together), granted_at, revoked_at
 ```
 
-## Roadmap
+## Still open
 
-- **Authentication** through an identity provider (OIDC, for example Keycloak), so the app trusts the provider's ID token instead of storing passwords.
-- **Authorization** with Pundit, so a citizen can only see and revoke their own consents.
-- **An audit log** recording who granted or revoked each consent, and when.
-- **Scheduling** for the expiry job as a nightly recurring job.
+- A public URL. Kamal is configured, and the host in `config/deploy.yml` is still a placeholder.
+- Sign-in with an identity provider (OIDC), kept alongside the password form.
+- Error tracking (Honeybadger or Sentry).

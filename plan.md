@@ -30,8 +30,8 @@ Goal: no loose ends before building new features.
 - [x] Protect consent history: remove `:granted_at` and `:revoked_at` from `consent_params` and from the form. Revoking only happens through the Revoke button. Add a test proving `PATCH /consents/:id` can't change `revoked_at`.
 - [x] Decide what to do with `users`/`sessions`: keep them for Phase 1. The tables and `bcrypt` stay so the authentication generator can reuse them.
 - [x] Remove `image_processing` from the Gemfile.
-- [ ] Tidy `ExpireStaleConsentsJob#perform` and the controller indentation.
-- [ ] Turn on branch protection for `main` on GitHub: require the 5 CI checks to pass.
+- [x] Tidy `ExpireStaleConsentsJob#perform` and the controller indentation. `perform` takes no unused arguments, and RuboCop is clean.
+- [x] Turn on branch protection for `main` on GitHub: require the CI checks to pass (lint, scan_ruby, scan_js, test, system-test, and smoke).
 
 Done when: CI green, no unused gems or tables without a plan.
 
@@ -96,12 +96,12 @@ Learning: Active Job adapters, Solid Queue, recurring jobs, Action Mailer.
 
 Goal: the app feels like a product, not a scaffold.
 
-- [ ] Citizen dashboard as the home page: "My consents", with Active/Revoked tabs.
-- [ ] Admin dashboard: counts of citizens, services, active and revoked consents.
-- [ ] Filter and search on the consents list (by status, by service).
-- [ ] Pagination (Pagy gem).
-- [ ] Revoke without a full page reload (Turbo Streams).
-- [ ] Remove scaffold leftovers (the generic "Editing …" pages, JSON views not used).
+- [x] Citizen dashboard as the home page: "My consents", with Active/Revoked tabs.
+- [x] Admin dashboard: counts of citizens, services, active and revoked consents.
+- [x] Filter and search on the consents list (by status, by service).
+- [x] Pagination (Pagy gem).
+- [x] Revoke without a full page reload (Turbo Streams).
+- [x] Remove scaffold leftovers (the generic "Editing …" pages, JSON views not used).
 
 Done when: a citizen can manage consents from one page, and the admin has an overview.
 
@@ -111,10 +111,10 @@ Learning: Turbo Frames and Streams, partials, query objects for filtering.
 
 Goal: other systems can read and revoke consents.
 
-- [ ] `namespace :api do namespace :v1` with `consents#index`, `#show` and `#revoke`.
-- [ ] Token authentication for API clients (`has_secure_token`).
-- [ ] Request tests for each endpoint, including 401 without a token.
-- [ ] Document the endpoints in the README.
+- [x] `namespace :api do namespace :v1` with `consents#index`, `#show` and `#revoke`.
+- [x] Token authentication for API clients (`has_secure_token`).
+- [x] Request tests for each endpoint, including 401 without a token.
+- [x] Document the endpoints in the README.
 
 Learning: API namespacing and versioning, `ActionController::API`, request specs.
 
@@ -122,20 +122,20 @@ Learning: API namespacing and versioning, `ActionController::API`, request specs
 
 Goal: a live URL to share.
 
-- [ ] Pick a host: Kamal to a small VPS (config is already in `config/deploy.yml`), or Render/Fly.io for something simpler.
-- [ ] Production database, `RAILS_MASTER_KEY`, Solid Queue running.
-- [ ] Seed data (`db/seeds.rb`) with a demo admin and citizen.
-- [ ] Add the live link and demo login to the README.
+- [x] Pick a host: Kamal (`config/deploy.yml`). The server address is still a placeholder.
+- [x] Production database schemas for cache, queue, and cable, `RAILS_MASTER_KEY`, and Solid Queue inside Puma.
+- [x] Seed data (`db/seeds.rb`) with a demo admin and citizen.
+- [ ] Add the live link to the README. Demo logins are documented. Publishing the URL needs a real host.
 
 Done when: the app runs at a public URL and CI still passes.
 
 ## Phase 8: Extras (pick any)
 
-- [ ] Run the Playwright smoke test in CI against a started server
-- [ ] Bullet gem to catch N+1 queries in development
-- [ ] SimpleCov for test coverage
-- [ ] Try RSpec + FactoryBot on one model, to compare with Minitest
-- [ ] Sign in with OIDC (Keycloak or Google) instead of passwords
+- [x] Run the Playwright smoke test in CI against a started server
+- [x] Bullet gem to catch N+1 queries in development
+- [x] SimpleCov for test coverage
+- [x] Try RSpec + FactoryBot on one model, to compare with Minitest
+- [ ] Sign in with OIDC (Keycloak or Google) without removing password sign-in
 - [ ] Error tracking (Honeybadger / Sentry)
 
 ---

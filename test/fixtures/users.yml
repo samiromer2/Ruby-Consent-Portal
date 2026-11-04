@@ -4,13 +4,16 @@ one:
   email_address: one@example.com
   password_digest: <%= password_digest %>
   role: citizen
+  api_token: one-api-token
 
 two:
   email_address: two@example.com
   password_digest: <%= password_digest %>
   role: citizen
+  api_token: two-api-token
 
 admin:
   email_address: admin@example.com
   password_digest: <%= password_digest %>
   role: admin
+  api_token: admin-api-token

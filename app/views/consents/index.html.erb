@@ -1,21 +1,51 @@
-<% content_for :title, "Consents" %>
+<% content_for :title, controller_name == "dashboard" ? "My consents" : "Consents" %>
 
 <div class="page-header">
-  <h1>Consents</h1>
+  <h1><%= controller_name == "dashboard" ? "My consents" : "Consents" %></h1>
   <% if policy(Consent.new(citizen: Current.user.citizen)).create? %>
     <%= link_to "New consent", new_consent_path, class: "btn" %>
   <% end %>
 </div>
 
+<nav class="tabs">
+  <%= link_to "Active", url_for(request.query_parameters.merge(status: "active", page: nil)), class: ("active" if params[:status] == "active") %>
+  <%= link_to "Revoked", url_for(request.query_parameters.merge(status: "revoked", page: nil)), class: ("active" if params[:status] == "revoked") %>
+  <%= link_to "All", url_for(request.query_parameters.merge(status: nil, page: nil)), class: ("active" if params[:status].blank?) %>
+</nav>
+
+<%= form_with url: request.path, method: :get, class: "filters" do |form| %>
+  <%= form.hidden_field :status, value: params[:status] if params[:status].present? %>
+  <div class="field">
+    <%= form.label :q, "Search" %>
+    <%= form.search_field :q, value: params[:q], placeholder: "Citizen or service" %>
+  </div>
+  <div class="field">
+    <%= form.label :service_id, "Service" %>
+    <%= form.collection_select :service_id, @services, :id, :name, { include_blank: "All services", selected: params[:service_id] } %>
+  </div>
+  <%= form.submit "Filter" %>
+<% end %>
+
 <div id="consents" class="card-list">
   <% @consents.each do |consent| %>
-    <div class="card">
-      <%= render consent %>
-      <%= link_to "View", consent, class: "card-link" %>
-    </div>
+    <%= render "consents/consent_card", consent: consent %>
   <% end %>
 </div>
 
 <% if @consents.empty? %>
-  <p class="empty">No consents yet.</p>
+  <p class="empty">
+    <% if params[:q].present? || params[:service_id].present? %>
+      No consents match.
+    <% elsif params[:status] == "revoked" %>
+      No revoked consents.
+    <% elsif params[:status] == "active" %>
+      No active consents.
+    <% else %>
+      No consents yet.
+    <% end %>
+  </p>
+<% end %>
+
+<% if @pagy.pages > 1 %>
+  <nav class="pagination"><%== pagy_nav(@pagy) %></nav>
 <% end %>

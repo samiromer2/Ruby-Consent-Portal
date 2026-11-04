@@ -47,12 +47,14 @@
     </header>
 
     <main class="container">
-      <% if notice.present? %>
-        <div class="flash notice"><%= notice %></div>
-      <% end %>
-      <% if alert.present? %>
-        <div class="flash alert"><%= alert %></div>
-      <% end %>
+      <div id="flash">
+        <% if notice.present? %>
+          <div class="flash notice"><%= notice %></div>
+        <% end %>
+        <% if alert.present? %>
+          <div class="flash alert"><%= alert %></div>
+        <% end %>
+      </div>
 
       <%= yield %>
     </main>

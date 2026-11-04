@@ -5,6 +5,7 @@ service: consent_portal
 image: consent_portal
 
 # Deploy to these servers.
+# Replace 192.168.0.1 with the real server before running bin/kamal setup.
 servers:
   web:
     - 192.168.0.1
@@ -40,7 +41,9 @@ registry:
 env:
   secret:
     - RAILS_MASTER_KEY
+    - CONSENT_PORTAL_DATABASE_PASSWORD
   clear:
+    APP_HOST: example.com
     # Run the Solid Queue Supervisor inside the web server's Puma process to do jobs.
     # When you start using multiple servers, you should split out job processing to a dedicated machine.
     SOLID_QUEUE_IN_PUMA: true

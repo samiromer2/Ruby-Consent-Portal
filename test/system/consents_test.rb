@@ -10,6 +10,7 @@ class ConsentsTest < ApplicationSystemTestCase
     fill_in "Password", with: "password"
     click_button "Sign in"
     assert_text user.email_address
+    assert_text "My consents"
 
     visit consent_url(consent)
     assert_selector ".badge-active", text: "Active"

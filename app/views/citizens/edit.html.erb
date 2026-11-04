@@ -1,11 +1,11 @@
-<% content_for :title, "Editing citizen" %>
+<% content_for :title, "Update citizen" %>
 
-<h1>Editing citizen</h1>
+<h1>Update citizen</h1>
 
 <%= render "form", citizen: @citizen %>
 
 
 <div class="actions">
-  <%= link_to "Show this citizen", @citizen, class: "btn btn-secondary" %>
+  <%= link_to "Back to citizen", @citizen, class: "btn btn-secondary" %>
   <%= link_to "Back to citizens", citizens_path, class: "btn btn-secondary" %>
 </div>

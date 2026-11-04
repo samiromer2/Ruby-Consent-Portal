@@ -2,13 +2,23 @@ Rails.application.routes.draw do
   resource :session
   resource :registration, only: %i[ new create ]
   resources :passwords, param: :token
-  root "consents#index"
+  root "dashboard#show"
 
   resources :citizens
   resources :services
   resources :consents, except: %i[ edit update ] do
     member do
       patch :revoke
+    end
+  end
+
+  namespace :api do
+    namespace :v1 do
+      resources :consents, only: %i[ index show ] do
+        member do
+          patch :revoke
+        end
+      end
     end
   end
 

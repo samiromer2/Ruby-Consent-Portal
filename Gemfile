@@ -23,6 +23,9 @@ gem "bcrypt", "~> 3.1.7"
 # Authorization policies [https://github.com/varvet/pundit]
 gem "pundit", "~> 2.5"
 
+# Pagination [https://github.com/ddnexus/pagy]
+gem "pagy", "~> 9.3"
+
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 # gem "tzinfo-data", platforms: %i[ windows jruby ]
 gem "tzinfo-data", platforms: %i[ mingw mswin x64_mingw jruby ]
@@ -54,15 +57,27 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  # One model spec, kept beside the Minitest suite [https://rspec.info/]
+  gem "rspec-rails"
+
+  # Factories for the RSpec example [https://github.com/thoughtbot/factory_bot_rails]
+  gem "factory_bot_rails"
 end
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+
+  # Warn about N+1 queries in development [https://github.com/flyerhzm/bullet]
+  gem "bullet"
 end
 
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+
+  # Coverage report written to coverage/ [https://github.com/simplecov-ruby/simplecov]
+  gem "simplecov", require: false
 end

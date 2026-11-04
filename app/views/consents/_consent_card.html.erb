@@ -1,0 +1,11 @@
+<div class="card" id="<%= dom_id(consent, :card) %>">
+  <%= render consent %>
+  <div class="card-actions">
+    <%= link_to "View", consent, class: "card-link" %>
+    <% if consent.active? && policy(consent).revoke? %>
+      <%= button_to "Revoke", revoke_consent_path(consent), method: :patch,
+            params: { return_to: "list", status: params[:status] },
+            class: "btn btn-warning" %>
+    <% end %>
+  </div>
+</div>

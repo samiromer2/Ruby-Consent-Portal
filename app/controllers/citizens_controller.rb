@@ -28,10 +28,8 @@ class CitizensController < ApplicationController
     respond_to do |format|
       if @citizen.save
         format.html { redirect_to @citizen, notice: "Citizen was successfully created." }
-        format.json { render :show, status: :created, location: @citizen }
       else
         format.html { render :new, status: :unprocessable_content }
-        format.json { render json: @citizen.errors, status: :unprocessable_content }
       end
     end
   end
@@ -41,10 +39,8 @@ class CitizensController < ApplicationController
     respond_to do |format|
       if @citizen.update(citizen_params)
         format.html { redirect_to @citizen, notice: "Citizen was successfully updated.", status: :see_other }
-        format.json { render :show, status: :ok, location: @citizen }
       else
         format.html { render :edit, status: :unprocessable_content }
-        format.json { render json: @citizen.errors, status: :unprocessable_content }
       end
     end
   end
@@ -55,12 +51,10 @@ class CitizensController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to citizens_path, notice: "Citizen was successfully destroyed.", status: :see_other }
-      format.json { head :no_content }
     end
   rescue ActiveRecord::DeleteRestrictionError
     respond_to do |format|
       format.html { redirect_to @citizen, alert: "A citizen with consent history cannot be deleted." }
-      format.json { head :conflict }
     end
   end
 

@@ -1,0 +1,29 @@
+<% content_for :title, "Dashboard" %>
+
+<div class="page-header">
+  <h1>Dashboard</h1>
+</div>
+
+<div class="stats">
+  <div class="stat">
+    <strong><%= @citizen_count %></strong>
+    <span class="muted">Citizens</span>
+  </div>
+  <div class="stat">
+    <strong><%= @service_count %></strong>
+    <span class="muted">Services</span>
+  </div>
+  <div class="stat">
+    <strong><%= @active_consent_count %></strong>
+    <span class="muted">Active consents</span>
+  </div>
+  <div class="stat">
+    <strong><%= @revoked_consent_count %></strong>
+    <span class="muted">Revoked consents</span>
+  </div>
+</div>
+
+<div class="actions">
+  <%= link_to "All consents", consents_path, class: "btn" %>
+  <%= link_to "Services", services_path, class: "btn btn-secondary" %>
+</div>
