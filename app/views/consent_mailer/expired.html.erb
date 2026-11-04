@@ -1,0 +1,8 @@
+<p>Hello <%= @consent.citizen.name %>,</p>
+
+<p>
+  Your consent for <strong><%= @consent.service.name %></strong> has expired.
+  It was granted on <%= l @consent.granted_at, format: :long %> and is no longer active.
+</p>
+
+<p>You can grant it again after signing in: <%= link_to "Consent Portal", root_url %></p>

@@ -7,6 +7,8 @@ class ExpireStaleConsentsJob < ApplicationJob
         consent.revoke!
         consent.consent_events.create!(action: :expired)
       end
+
+      ConsentMailer.expired(consent).deliver_later
     end
   end
 end

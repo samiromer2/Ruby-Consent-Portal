@@ -83,10 +83,10 @@ Learning: append-only tables, model callbacks vs explicit service objects (try a
 
 Goal: the expiry job runs every night on its own.
 
-- [ ] Install Solid Queue properly (`bin/rails solid_queue:install`), set the production adapter.
-- [ ] Add the job to `config/recurring.yml` to run nightly.
-- [ ] Run it in development with `bin/jobs` and watch it work.
-- [ ] Send the citizen an email when a consent expires (Action Mailer, preview in `test/mailers/previews`).
+- [x] Install Solid Queue properly (`bin/rails solid_queue:install`), set the production adapter.
+- [x] Add the job to `config/recurring.yml` to run nightly.
+- [x] Run it in development with `bin/jobs` and watch it work.
+- [x] Send the citizen an email when a consent expires (Action Mailer, preview in `test/mailers/previews`).
 
 Done when: `bin/jobs` picks up the recurring job, and the expiry email shows in the mailer preview.
 
