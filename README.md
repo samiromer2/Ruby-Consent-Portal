@@ -50,6 +50,25 @@ bin/setup
 
 `bin/setup` installs the gems, creates and migrates the database, and starts the server. Then open http://localhost:3000.
 
+Load the demo accounts with `bin/rails db:seed`:
+
+| Email | Password | What you can do |
+|---|---|---|
+| `admin@example.com` | `password` | See every consent and manage services |
+| `citizen@example.com` | `password` | See and revoke that citizen's consents |
+
+The password is for a local demo. Change it before the app is reachable on a public server.
+
+## Deploy
+
+The app is set up for [Kamal](https://kamal-deploy.org/). `config/deploy.yml` still points at the placeholder host `192.168.0.1`. There is no public URL yet.
+
+Before the first deploy, replace that host, set `APP_HOST` to the real hostname, and provide `RAILS_MASTER_KEY` and `CONSENT_PORTAL_DATABASE_PASSWORD`. Production uses four PostgreSQL databases (primary, cache, queue, and cable). Solid Queue runs inside Puma (`SOLID_QUEUE_IN_PUMA`). Then:
+
+```bash
+bin/kamal setup
+```
+
 To start the server again later:
 
 ```bash

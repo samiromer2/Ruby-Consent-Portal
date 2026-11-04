@@ -122,10 +122,10 @@ Learning: API namespacing and versioning, `ActionController::API`, request specs
 
 Goal: a live URL to share.
 
-- [ ] Pick a host: Kamal to a small VPS (config is already in `config/deploy.yml`), or Render/Fly.io for something simpler.
-- [ ] Production database, `RAILS_MASTER_KEY`, Solid Queue running.
-- [ ] Seed data (`db/seeds.rb`) with a demo admin and citizen.
-- [ ] Add the live link and demo login to the README.
+- [x] Pick a host: Kamal (`config/deploy.yml`). The server address is still a placeholder.
+- [x] Production database schemas for cache, queue, and cable, `RAILS_MASTER_KEY`, and Solid Queue inside Puma.
+- [x] Seed data (`db/seeds.rb`) with a demo admin and citizen.
+- [ ] Add the live link to the README. Demo logins are documented. Publishing the URL needs a real host.
 
 Done when: the app runs at a public URL and CI still passes.
 
