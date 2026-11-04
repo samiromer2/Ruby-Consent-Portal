@@ -111,10 +111,10 @@ Learning: Turbo Frames and Streams, partials, query objects for filtering.
 
 Goal: other systems can read and revoke consents.
 
-- [ ] `namespace :api do namespace :v1` with `consents#index`, `#show` and `#revoke`.
-- [ ] Token authentication for API clients (`has_secure_token`).
-- [ ] Request tests for each endpoint, including 401 without a token.
-- [ ] Document the endpoints in the README.
+- [x] `namespace :api do namespace :v1` with `consents#index`, `#show` and `#revoke`.
+- [x] Token authentication for API clients (`has_secure_token`).
+- [x] Request tests for each endpoint, including 401 without a token.
+- [x] Document the endpoints in the README.
 
 Learning: API namespacing and versioning, `ActionController::API`, request specs.
 

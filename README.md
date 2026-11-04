@@ -102,13 +102,34 @@ Run the expiry job by hand from the console:
 bin/rails runner "ExpireStaleConsentsJob.perform_now"
 ```
 
-It isn't scheduled yet. In production it would run nightly as a Solid Queue recurring job, configured in `config/recurring.yml`.
+In production it runs nightly at 3am as a Solid Queue recurring job (`config/recurring.yml`).
+
+## JSON API
+
+Other systems can read and revoke consents at `/api/v1`. Send the user's token in the `Authorization` header. A user receives a token when the account is created. Read one from the console with `User.find_by!(email_address: "admin@example.com").api_token`.
+
+```bash
+curl -H "Authorization: Bearer $TOKEN" http://localhost:3000/api/v1/consents
+curl -H "Authorization: Bearer $TOKEN" http://localhost:3000/api/v1/consents/1
+curl -X PATCH -H "Authorization: Bearer $TOKEN" http://localhost:3000/api/v1/consents/1/revoke
+```
+
+| Request | Who | Result |
+|---|---|---|
+| `GET /api/v1/consents` | Citizen | That citizen's consents |
+| `GET /api/v1/consents` | Admin | Every consent |
+| `GET /api/v1/consents/:id` | Owner or admin | One consent |
+| `PATCH /api/v1/consents/:id/revoke` | Owner of an active consent | Sets `revoked_at` and writes a revoked event |
+
+A missing or unknown token returns `401`. A signed-in client who is not allowed to see or revoke that consent returns `403`.
 
 ## Data model
 
 ```
 Citizen ──< Consent >── Service
+User ── Citizen
 
+users      email_address, role (citizen or admin), api_token
 citizens   name, email (unique), verified
 services   name, description
 consents   citizen_id, service_id (unique together), granted_at, revoked_at
