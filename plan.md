@@ -30,8 +30,8 @@ Goal: no loose ends before building new features.
 - [x] Protect consent history: remove `:granted_at` and `:revoked_at` from `consent_params` and from the form. Revoking only happens through the Revoke button. Add a test proving `PATCH /consents/:id` can't change `revoked_at`.
 - [x] Decide what to do with `users`/`sessions`: keep them for Phase 1. The tables and `bcrypt` stay so the authentication generator can reuse them.
 - [x] Remove `image_processing` from the Gemfile.
-- [ ] Tidy `ExpireStaleConsentsJob#perform` and the controller indentation.
-- [ ] Turn on branch protection for `main` on GitHub: require the 5 CI checks to pass.
+- [x] Tidy `ExpireStaleConsentsJob#perform` and the controller indentation. `perform` takes no unused arguments, and RuboCop is clean.
+- [x] Turn on branch protection for `main` on GitHub: require the CI checks to pass (lint, scan_ruby, scan_js, test, system-test, and smoke).
 
 Done when: CI green, no unused gems or tables without a plan.
 
