@@ -136,3 +136,11 @@ CI runs these checks on every push and pull request (`.github/workflows/ci.yml`)
 This repository is the completed app, for local use.
 
 Kamal's config is in `config/deploy.yml` and still uses the placeholder host `192.168.0.1`. There is no public site. Sign-in is email and password. Errors are not sent to an external tracker. Those three boundaries are written down in [#20](https://github.com/samiromer2/Ruby-Consent-Portal/issues/20), [#21](https://github.com/samiromer2/Ruby-Consent-Portal/issues/21), and [#22](https://github.com/samiromer2/Ruby-Consent-Portal/issues/22).
+
+## Contributing
+
+Contributions are welcome. The [open issues](https://github.com/samiromer2/Ruby-Consent-Portal/issues) each say what to do and when it's done, and the ones labelled [good first issue](https://github.com/samiromer2/Ruby-Consent-Portal/labels/good%20first%20issue) are a friendly place to start. See [CONTRIBUTING.md](CONTRIBUTING.md) for how to set up, test, and open a PR.
+
+## License
+
+[MIT](LICENSE)
