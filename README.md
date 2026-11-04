@@ -80,7 +80,12 @@ bin/rails server
 ```bash
 bin/rails test           # model, controller, integration and job tests
 bin/rails test:system    # browser tests in headless Chrome
+bundle exec rspec        # one Consent example, using FactoryBot
 ```
+
+`bin/rails test` writes a coverage report to `coverage/index.html`.
+
+CI also runs `script/playwright/consent_flow.py` against a booted server.
 
 | Kind | Where | What it covers |
 |---|---|---|
@@ -154,9 +159,8 @@ services   name, description
 consents   citizen_id, service_id (unique together), granted_at, revoked_at
 ```
 
-## Roadmap
+## Still open
 
-- **Authentication** through an identity provider (OIDC, for example Keycloak), so the app trusts the provider's ID token instead of storing passwords.
-- **Authorization** with Pundit, so a citizen can only see and revoke their own consents.
-- **An audit log** recording who granted or revoked each consent, and when.
-- **Scheduling** for the expiry job as a nightly recurring job.
+- A public URL. Kamal is configured, and the host in `config/deploy.yml` is still a placeholder.
+- Sign-in with an identity provider (OIDC), kept alongside the password form.
+- Error tracking (Honeybadger or Sentry).

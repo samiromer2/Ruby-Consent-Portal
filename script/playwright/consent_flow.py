@@ -6,7 +6,8 @@ Walks through the main user journey in a real browser:
   3. grant consent to that service
   4. try to grant the same consent again and expect it to be blocked
   5. revoke the consent, check the "Revoked" badge, and check the history
-  6. sign back in as the admin and confirm history blocks deleting the test data
+  6. confirm history blocks deleting the consent, then sign back in as the admin
+     and confirm history blocks deleting the citizen and the service
 
 The admin account comes from `bin/rails db:seed` (admin@example.com / password).
 
@@ -61,6 +62,9 @@ def sign_up(page: Page, base_url: str, name: str, email: str) -> str:
 
     page.goto(f"{base_url}/citizens")
     page.locator(".card", has_text=name).get_by_role("link", name="View").click()
+    # Turbo may not finish the visit before the next line reads the URL.
+    page.wait_for_url("**/citizens/*")
+    expect(page.get_by_role("heading", name="Citizen")).to_be_visible()
     screenshot(page, "1_citizen_created")
     return page.url
 
@@ -146,12 +150,13 @@ def run(base_url: str, headed: bool, slow_mo: int, keep: bool) -> None:
                 step("Keeping test data (--keep)")
             else:
                 # History is append-only, so the citizen, consent, and service stay.
+                # Only the owner can delete a consent. An admin can try the citizen and the service.
                 step("Confirming consent history cannot be deleted")
+                history_blocks_delete(page, consent_url, "A consent with history cannot be deleted.")
                 sign_out(page)
                 sign_in(page, base_url, "admin@example.com")
                 history_blocks_delete(page, citizen_url, "A citizen with consent history cannot be deleted.")
                 history_blocks_delete(page, service_url, "A service with consent history cannot be deleted.")
-                history_blocks_delete(page, consent_url, "A consent with history cannot be deleted.")
         except Exception:
             screenshot(page, "failure")
             print(f"✗ Failed on {page.url}. See {SCREENSHOT_DIR / 'failure.png'}", file=sys.stderr)

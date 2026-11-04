@@ -131,11 +131,11 @@ Done when: the app runs at a public URL and CI still passes.
 
 ## Phase 8: Extras (pick any)
 
-- [ ] Run the Playwright smoke test in CI against a started server
-- [ ] Bullet gem to catch N+1 queries in development
-- [ ] SimpleCov for test coverage
-- [ ] Try RSpec + FactoryBot on one model, to compare with Minitest
-- [ ] Sign in with OIDC (Keycloak or Google) instead of passwords
+- [x] Run the Playwright smoke test in CI against a started server
+- [x] Bullet gem to catch N+1 queries in development
+- [x] SimpleCov for test coverage
+- [x] Try RSpec + FactoryBot on one model, to compare with Minitest
+- [ ] Sign in with OIDC (Keycloak or Google) without removing password sign-in
 - [ ] Error tracking (Honeybadger / Sentry)
 
 ---

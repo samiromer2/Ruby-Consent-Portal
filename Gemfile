@@ -57,15 +57,27 @@ group :development, :test do
 
   # Omakase Ruby styling [https://github.com/rails/rubocop-rails-omakase/]
   gem "rubocop-rails-omakase", require: false
+
+  # One model spec, kept beside the Minitest suite [https://rspec.info/]
+  gem "rspec-rails"
+
+  # Factories for the RSpec example [https://github.com/thoughtbot/factory_bot_rails]
+  gem "factory_bot_rails"
 end
 
 group :development do
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem "web-console"
+
+  # Warn about N+1 queries in development [https://github.com/flyerhzm/bullet]
+  gem "bullet"
 end
 
 group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+
+  # Coverage report written to coverage/ [https://github.com/simplecov-ruby/simplecov]
+  gem "simplecov", require: false
 end
