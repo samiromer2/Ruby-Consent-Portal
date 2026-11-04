@@ -1,0 +1,595 @@
+{
+  "simplecov_history": {
+    "format_version": 1,
+    "entries": [
+      {
+        "created_at": "2026-11-04T16:53:42Z",
+        "branch": "phase-8/extras",
+        "commit": "0ebfd958388d6aa673a1e7d6bd2f9516abd51d65",
+        "totals": {
+          "line": 8.1
+        },
+        "groups": {
+          "Channels": {
+            "line": 0.0
+          },
+          "Controllers": {
+            "line": 0.0
+          },
+          "Helpers": {
+            "line": 100.0
+          },
+          "Jobs": {
+            "line": 0.0
+          },
+          "Mailers": {
+            "line": 0.0
+          },
+          "Models": {
+            "line": 67.39
+          },
+          "Ungrouped": {
+            "line": 0.0
+          }
+        },
+        "files": {
+          "app/channels/application_cable/connection.rb": {
+            "line": 0.0
+          },
+          "app/controllers/api/v1/base_controller.rb": {
+            "line": 0.0
+          },
+          "app/controllers/api/v1/consents_controller.rb": {
+            "line": 0.0
+          },
+          "app/controllers/application_controller.rb": {
+            "line": 0.0
+          },
+          "app/controllers/citizens_controller.rb": {
+            "line": 0.0
+          },
+          "app/controllers/concerns/authentication.rb": {
+            "line": 0.0
+          },
+          "app/controllers/concerns/consent_listing.rb": {
+            "line": 0.0
+          },
+          "app/controllers/consents_controller.rb": {
+            "line": 0.0
+          },
+          "app/controllers/dashboard_controller.rb": {
+            "line": 0.0
+          },
+          "app/controllers/passwords_controller.rb": {
+            "line": 0.0
+          },
+          "app/controllers/registrations_controller.rb": {
+            "line": 0.0
+          },
+          "app/controllers/services_controller.rb": {
+            "line": 0.0
+          },
+          "app/controllers/sessions_controller.rb": {
+            "line": 0.0
+          },
+          "app/helpers/application_helper.rb": {
+            "line": 100.0
+          },
+          "app/helpers/citizens_helper.rb": {
+            "line": 100.0
+          },
+          "app/helpers/consents_helper.rb": {
+            "line": 100.0
+          },
+          "app/helpers/services_helper.rb": {
+            "line": 100.0
+          },
+          "app/jobs/application_job.rb": {
+            "line": 0.0
+          },
+          "app/jobs/expire_stale_consents_job.rb": {
+            "line": 0.0
+          },
+          "app/mailers/application_mailer.rb": {
+            "line": 0.0
+          },
+          "app/mailers/consent_mailer.rb": {
+            "line": 0.0
+          },
+          "app/mailers/passwords_mailer.rb": {
+            "line": 0.0
+          },
+          "app/models/application_record.rb": {
+            "line": 100.0
+          },
+          "app/models/citizen.rb": {
+            "line": 100.0
+          },
+          "app/models/consent.rb": {
+            "line": 100.0
+          },
+          "app/models/consent_event.rb": {
+            "line": 0.0
+          },
+          "app/models/current.rb": {
+            "line": 0.0
+          },
+          "app/models/service.rb": {
+            "line": 100.0
+          },
+          "app/models/session.rb": {
+            "line": 0.0
+          },
+          "app/models/user.rb": {
+            "line": 100.0
+          },
+          "app/policies/application_policy.rb": {
+            "line": 0.0
+          },
+          "app/policies/citizen_policy.rb": {
+            "line": 0.0
+          },
+          "app/policies/consent_policy.rb": {
+            "line": 0.0
+          },
+          "app/policies/dashboard_policy.rb": {
+            "line": 0.0
+          },
+          "app/policies/service_policy.rb": {
+            "line": 0.0
+          },
+          "app/services/consents.rb": {
+            "line": 0.0
+          },
+          "app/services/consents/filter.rb": {
+            "line": 0.0
+          },
+          "app/services/consents/revoke.rb": {
+            "line": 0.0
+          }
+        }
+      },
+      {
+        "created_at": "2026-11-04T16:53:51Z",
+        "branch": "phase-8/extras",
+        "commit": "0ebfd958388d6aa673a1e7d6bd2f9516abd51d65",
+        "totals": {
+          "line": 91.89
+        },
+        "groups": {
+          "Channels": {
+            "line": 0.0
+          },
+          "Controllers": {
+            "line": 93.82
+          },
+          "Helpers": {
+            "line": 100.0
+          },
+          "Jobs": {
+            "line": 100.0
+          },
+          "Mailers": {
+            "line": 81.81
+          },
+          "Models": {
+            "line": 100.0
+          },
+          "Ungrouped": {
+            "line": 91.42
+          }
+        },
+        "files": {
+          "app/channels/application_cable/connection.rb": {
+            "line": 0.0
+          },
+          "app/controllers/api/v1/base_controller.rb": {
+            "line": 100.0
+          },
+          "app/controllers/api/v1/consents_controller.rb": {
+            "line": 100.0
+          },
+          "app/controllers/application_controller.rb": {
+            "line": 100.0
+          },
+          "app/controllers/citizens_controller.rb": {
+            "line": 74.28
+          },
+          "app/controllers/concerns/authentication.rb": {
+            "line": 100.0
+          },
+          "app/controllers/concerns/consent_listing.rb": {
+            "line": 100.0
+          },
+          "app/controllers/consents_controller.rb": {
+            "line": 94.73
+          },
+          "app/controllers/dashboard_controller.rb": {
+            "line": 92.85
+          },
+          "app/controllers/passwords_controller.rb": {
+            "line": 100.0
+          },
+          "app/controllers/registrations_controller.rb": {
+            "line": 100.0
+          },
+          "app/controllers/services_controller.rb": {
+            "line": 87.87
+          },
+          "app/controllers/sessions_controller.rb": {
+            "line": 100.0
+          },
+          "app/helpers/application_helper.rb": {
+            "line": 100.0
+          },
+          "app/helpers/citizens_helper.rb": {
+            "line": 100.0
+          },
+          "app/helpers/consents_helper.rb": {
+            "line": 100.0
+          },
+          "app/helpers/services_helper.rb": {
+            "line": 100.0
+          },
+          "app/jobs/application_job.rb": {
+            "line": 100.0
+          },
+          "app/jobs/expire_stale_consents_job.rb": {
+            "line": 100.0
+          },
+          "app/mailers/application_mailer.rb": {
+            "line": 100.0
+          },
+          "app/mailers/consent_mailer.rb": {
+            "line": 100.0
+          },
+          "app/mailers/passwords_mailer.rb": {
+            "line": 50.0
+          },
+          "app/models/application_record.rb": {
+            "line": 100.0
+          },
+          "app/models/citizen.rb": {
+            "line": 100.0
+          },
+          "app/models/consent.rb": {
+            "line": 100.0
+          },
+          "app/models/consent_event.rb": {
+            "line": 100.0
+          },
+          "app/models/current.rb": {
+            "line": 100.0
+          },
+          "app/models/service.rb": {
+            "line": 100.0
+          },
+          "app/models/session.rb": {
+            "line": 100.0
+          },
+          "app/models/user.rb": {
+            "line": 100.0
+          },
+          "app/policies/application_policy.rb": {
+            "line": 81.48
+          },
+          "app/policies/citizen_policy.rb": {
+            "line": 92.85
+          },
+          "app/policies/consent_policy.rb": {
+            "line": 94.73
+          },
+          "app/policies/dashboard_policy.rb": {
+            "line": 100.0
+          },
+          "app/policies/service_policy.rb": {
+            "line": 92.85
+          },
+          "app/services/consents.rb": {
+            "line": 100.0
+          },
+          "app/services/consents/filter.rb": {
+            "line": 95.23
+          },
+          "app/services/consents/revoke.rb": {
+            "line": 100.0
+          }
+        }
+      },
+      {
+        "created_at": "2026-11-04T16:53:57Z",
+        "branch": "phase-8/extras",
+        "commit": "0ebfd958388d6aa673a1e7d6bd2f9516abd51d65",
+        "totals": {
+          "line": 91.89
+        },
+        "groups": {
+          "Channels": {
+            "line": 0.0
+          },
+          "Controllers": {
+            "line": 93.82
+          },
+          "Helpers": {
+            "line": 100.0
+          },
+          "Jobs": {
+            "line": 100.0
+          },
+          "Mailers": {
+            "line": 81.81
+          },
+          "Models": {
+            "line": 100.0
+          },
+          "Ungrouped": {
+            "line": 91.42
+          }
+        },
+        "files": {
+          "app/channels/application_cable/connection.rb": {
+            "line": 0.0
+          },
+          "app/controllers/api/v1/base_controller.rb": {
+            "line": 100.0
+          },
+          "app/controllers/api/v1/consents_controller.rb": {
+            "line": 100.0
+          },
+          "app/controllers/application_controller.rb": {
+            "line": 100.0
+          },
+          "app/controllers/citizens_controller.rb": {
+            "line": 74.28
+          },
+          "app/controllers/concerns/authentication.rb": {
+            "line": 100.0
+          },
+          "app/controllers/concerns/consent_listing.rb": {
+            "line": 100.0
+          },
+          "app/controllers/consents_controller.rb": {
+            "line": 94.73
+          },
+          "app/controllers/dashboard_controller.rb": {
+            "line": 92.85
+          },
+          "app/controllers/passwords_controller.rb": {
+            "line": 100.0
+          },
+          "app/controllers/registrations_controller.rb": {
+            "line": 100.0
+          },
+          "app/controllers/services_controller.rb": {
+            "line": 87.87
+          },
+          "app/controllers/sessions_controller.rb": {
+            "line": 100.0
+          },
+          "app/helpers/application_helper.rb": {
+            "line": 100.0
+          },
+          "app/helpers/citizens_helper.rb": {
+            "line": 100.0
+          },
+          "app/helpers/consents_helper.rb": {
+            "line": 100.0
+          },
+          "app/helpers/services_helper.rb": {
+            "line": 100.0
+          },
+          "app/jobs/application_job.rb": {
+            "line": 100.0
+          },
+          "app/jobs/expire_stale_consents_job.rb": {
+            "line": 100.0
+          },
+          "app/mailers/application_mailer.rb": {
+            "line": 100.0
+          },
+          "app/mailers/consent_mailer.rb": {
+            "line": 100.0
+          },
+          "app/mailers/passwords_mailer.rb": {
+            "line": 50.0
+          },
+          "app/models/application_record.rb": {
+            "line": 100.0
+          },
+          "app/models/citizen.rb": {
+            "line": 100.0
+          },
+          "app/models/consent.rb": {
+            "line": 100.0
+          },
+          "app/models/consent_event.rb": {
+            "line": 100.0
+          },
+          "app/models/current.rb": {
+            "line": 100.0
+          },
+          "app/models/service.rb": {
+            "line": 100.0
+          },
+          "app/models/session.rb": {
+            "line": 100.0
+          },
+          "app/models/user.rb": {
+            "line": 100.0
+          },
+          "app/policies/application_policy.rb": {
+            "line": 81.48
+          },
+          "app/policies/citizen_policy.rb": {
+            "line": 92.85
+          },
+          "app/policies/consent_policy.rb": {
+            "line": 94.73
+          },
+          "app/policies/dashboard_policy.rb": {
+            "line": 100.0
+          },
+          "app/policies/service_policy.rb": {
+            "line": 92.85
+          },
+          "app/services/consents.rb": {
+            "line": 100.0
+          },
+          "app/services/consents/filter.rb": {
+            "line": 95.23
+          },
+          "app/services/consents/revoke.rb": {
+            "line": 100.0
+          }
+        }
+      },
+      {
+        "created_at": "2026-11-04T16:54:18Z",
+        "branch": "phase-8/extras",
+        "commit": "0ebfd958388d6aa673a1e7d6bd2f9516abd51d65",
+        "totals": {
+          "line": 91.66
+        },
+        "groups": {
+          "Channels": {
+            "line": 0.0
+          },
+          "Controllers": {
+            "line": 93.82
+          },
+          "Helpers": {
+            "line": 100.0
+          },
+          "Jobs": {
+            "line": 100.0
+          },
+          "Mailers": {
+            "line": 81.81
+          },
+          "Models": {
+            "line": 100.0
+          },
+          "Ungrouped": {
+            "line": 90.47
+          }
+        },
+        "files": {
+          "app/channels/application_cable/connection.rb": {
+            "line": 0.0
+          },
+          "app/controllers/api/v1/base_controller.rb": {
+            "line": 100.0
+          },
+          "app/controllers/api/v1/consents_controller.rb": {
+            "line": 100.0
+          },
+          "app/controllers/application_controller.rb": {
+            "line": 100.0
+          },
+          "app/controllers/citizens_controller.rb": {
+            "line": 74.28
+          },
+          "app/controllers/concerns/authentication.rb": {
+            "line": 100.0
+          },
+          "app/controllers/concerns/consent_listing.rb": {
+            "line": 100.0
+          },
+          "app/controllers/consents_controller.rb": {
+            "line": 94.73
+          },
+          "app/controllers/dashboard_controller.rb": {
+            "line": 92.85
+          },
+          "app/controllers/passwords_controller.rb": {
+            "line": 100.0
+          },
+          "app/controllers/registrations_controller.rb": {
+            "line": 100.0
+          },
+          "app/controllers/services_controller.rb": {
+            "line": 87.87
+          },
+          "app/controllers/sessions_controller.rb": {
+            "line": 100.0
+          },
+          "app/helpers/application_helper.rb": {
+            "line": 100.0
+          },
+          "app/helpers/citizens_helper.rb": {
+            "line": 100.0
+          },
+          "app/helpers/consents_helper.rb": {
+            "line": 100.0
+          },
+          "app/helpers/services_helper.rb": {
+            "line": 100.0
+          },
+          "app/jobs/application_job.rb": {
+            "line": 100.0
+          },
+          "app/jobs/expire_stale_consents_job.rb": {
+            "line": 100.0
+          },
+          "app/mailers/application_mailer.rb": {
+            "line": 100.0
+          },
+          "app/mailers/consent_mailer.rb": {
+            "line": 100.0
+          },
+          "app/mailers/passwords_mailer.rb": {
+            "line": 50.0
+          },
+          "app/models/application_record.rb": {
+            "line": 100.0
+          },
+          "app/models/citizen.rb": {
+            "line": 100.0
+          },
+          "app/models/consent.rb": {
+            "line": 100.0
+          },
+          "app/models/consent_event.rb": {
+            "line": 100.0
+          },
+          "app/models/current.rb": {
+            "line": 100.0
+          },
+          "app/models/service.rb": {
+            "line": 100.0
+          },
+          "app/models/session.rb": {
+            "line": 100.0
+          },
+          "app/models/user.rb": {
+            "line": 100.0
+          },
+          "app/policies/application_policy.rb": {
+            "line": 81.48
+          },
+          "app/policies/citizen_policy.rb": {
+            "line": 92.85
+          },
+          "app/policies/consent_policy.rb": {
+            "line": 94.73
+          },
+          "app/policies/dashboard_policy.rb": {
+            "line": 100.0
+          },
+          "app/policies/service_policy.rb": {
+            "line": 92.85
+          },
+          "app/services/consents.rb": {
+            "line": 0.0
+          },
+          "app/services/consents/filter.rb": {
+            "line": 95.23
+          },
+          "app/services/consents/revoke.rb": {
+            "line": 100.0
+          }
+        }
+      }
+    ]
+  }
+}
