@@ -28,10 +28,8 @@ class ServicesController < ApplicationController
     respond_to do |format|
       if @service.save
         format.html { redirect_to @service, notice: "Service was successfully created." }
-        format.json { render :show, status: :created, location: @service }
       else
         format.html { render :new, status: :unprocessable_content }
-        format.json { render json: @service.errors, status: :unprocessable_content }
       end
     end
   end
@@ -41,10 +39,8 @@ class ServicesController < ApplicationController
     respond_to do |format|
       if @service.update(service_params)
         format.html { redirect_to @service, notice: "Service was successfully updated.", status: :see_other }
-        format.json { render :show, status: :ok, location: @service }
       else
         format.html { render :edit, status: :unprocessable_content }
-        format.json { render json: @service.errors, status: :unprocessable_content }
       end
     end
   end
@@ -55,12 +51,10 @@ class ServicesController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to services_path, notice: "Service was successfully destroyed.", status: :see_other }
-      format.json { head :no_content }
     end
   rescue ActiveRecord::DeleteRestrictionError
     respond_to do |format|
       format.html { redirect_to @service, alert: "A service with consent history cannot be deleted." }
-      format.json { head :conflict }
     end
   end
 

@@ -1,0 +1,19 @@
+<%= turbo_stream.update "flash" do %>
+  <div class="flash notice">Consent revoked.</div>
+<% end %>
+
+<% if params[:return_to] == "list" && params[:status] == "active" %>
+  <%= turbo_stream.remove dom_id(@consent, :card) %>
+<% elsif params[:return_to] == "list" %>
+  <%= turbo_stream.replace dom_id(@consent, :card) do %>
+    <%= render "consents/consent_card", consent: @consent %>
+  <% end %>
+<% else %>
+  <%= turbo_stream.replace @consent %>
+  <%= turbo_stream.replace "consent_history" do %>
+    <%= render "consents/history", events: @consent.consent_events.includes(:user).order(:created_at) %>
+  <% end %>
+  <%= turbo_stream.replace "consent_actions" do %>
+    <%= render "consents/actions", consent: @consent %>
+  <% end %>
+<% end %>

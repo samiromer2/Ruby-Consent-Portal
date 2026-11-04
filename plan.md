@@ -96,12 +96,12 @@ Learning: Active Job adapters, Solid Queue, recurring jobs, Action Mailer.
 
 Goal: the app feels like a product, not a scaffold.
 
-- [ ] Citizen dashboard as the home page: "My consents", with Active/Revoked tabs.
-- [ ] Admin dashboard: counts of citizens, services, active and revoked consents.
-- [ ] Filter and search on the consents list (by status, by service).
-- [ ] Pagination (Pagy gem).
-- [ ] Revoke without a full page reload (Turbo Streams).
-- [ ] Remove scaffold leftovers (the generic "Editing …" pages, JSON views not used).
+- [x] Citizen dashboard as the home page: "My consents", with Active/Revoked tabs.
+- [x] Admin dashboard: counts of citizens, services, active and revoked consents.
+- [x] Filter and search on the consents list (by status, by service).
+- [x] Pagination (Pagy gem).
+- [x] Revoke without a full page reload (Turbo Streams).
+- [x] Remove scaffold leftovers (the generic "Editing …" pages, JSON views not used).
 
 Done when: a citizen can manage consents from one page, and the admin has an overview.
 

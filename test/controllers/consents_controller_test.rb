@@ -6,6 +6,58 @@ class ConsentsControllerTest < ActionDispatch::IntegrationTest
     sign_in_as(users(:one))
   end
 
+  test "citizen home lists active consents" do
+    get root_url
+    assert_response :success
+    assert_match "My consents", response.body
+    assert_match citizens(:one).name, response.body
+    assert_no_match citizens(:two).name, response.body
+  end
+
+  test "admin home shows counts" do
+    sign_in_as(users(:admin))
+    get root_url
+    assert_response :success
+    assert_match "Dashboard", response.body
+    assert_match "Active consents", response.body
+    assert_match "Revoked consents", response.body
+  end
+
+  test "filters consents by status, service, and search" do
+    get consents_url(status: "revoked")
+    assert_response :success
+    assert_match "No revoked consents.", response.body
+    assert_select "#consents .card", count: 0
+
+    get consents_url(q: "Health")
+    assert_match services(:one).name, response.body
+
+    get consents_url(q: "no-such-service")
+    assert_match "No consents match.", response.body
+  end
+
+  test "paginates the consent list" do
+    21.times do |index|
+      service = Service.create!(name: "Paged #{index}")
+      Consent.create!(citizen: citizens(:one), service: service, granted_at: index.minutes.ago)
+    end
+
+    get consents_url
+    assert_select "nav.pagination"
+    get consents_url(page: 2)
+    assert_response :success
+    assert_match citizens(:one).name, response.body
+  end
+
+  test "revoke responds with a turbo stream" do
+    patch revoke_consent_url(@consent), as: :turbo_stream
+    assert_response :success
+    assert_equal "text/vnd.turbo-stream.html", response.media_type
+    assert_match "Consent revoked.", response.body
+    assert_match "Revoked", response.body
+    assert_not_nil @consent.reload.revoked_at
+  end
+
   test "should get index" do
     get consents_url
     assert_response :success
