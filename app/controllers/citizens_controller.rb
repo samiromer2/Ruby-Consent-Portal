@@ -3,7 +3,7 @@ class CitizensController < ApplicationController
 
   # GET /citizens or /citizens.json
   def index
-    @citizens = Citizen.all
+    @citizens = policy_scope(Citizen).order(:name)
   end
 
   # GET /citizens/1 or /citizens/1.json
@@ -13,6 +13,7 @@ class CitizensController < ApplicationController
   # GET /citizens/new
   def new
     @citizen = Citizen.new
+    authorize @citizen
   end
 
   # GET /citizens/1/edit
@@ -21,7 +22,8 @@ class CitizensController < ApplicationController
 
   # POST /citizens or /citizens.json
   def create
-    @citizen = Current.user.build_citizen(citizen_params)
+    @citizen = Citizen.new(citizen_params)
+    authorize @citizen
 
     respond_to do |format|
       if @citizen.save
@@ -61,10 +63,13 @@ class CitizensController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_citizen
       @citizen = Citizen.find(params.expect(:id))
+      authorize @citizen
     end
 
-    # Only allow a list of trusted parameters through.
+    # verified is an admin decision. A citizen cannot mark themselves verified.
     def citizen_params
-      params.expect(citizen: [ :name, :email ])
+      allowed = [ :name, :email ]
+      allowed << :verified if Current.user.admin?
+      params.expect(citizen: allowed)
     end
 end

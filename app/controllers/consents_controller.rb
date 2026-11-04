@@ -1,10 +1,9 @@
 class ConsentsController < ApplicationController
-  # before_action :set_consent, only: %i[ show edit update destroy ]
   before_action :set_consent, only: %i[ show edit update destroy revoke ]
 
   # GET /consents or /consents.json
   def index
-    @consents = Consent.includes(:citizen, :service).order(granted_at: :desc)
+    @consents = policy_scope(Consent).includes(:citizen, :service).order(granted_at: :desc)
   end
 
   # GET /consents/1 or /consents/1.json
@@ -13,7 +12,8 @@ class ConsentsController < ApplicationController
 
   # GET /consents/new
   def new
-    @consent = Consent.new
+    @consent = Consent.new(citizen: Current.user.citizen)
+    authorize @consent
   end
 
   # GET /consents/1/edit
@@ -23,6 +23,8 @@ class ConsentsController < ApplicationController
   # POST /consents or /consents.json
   def create
     @consent = Consent.new(consent_params)
+    @consent.citizen = Current.user.citizen
+    authorize @consent
 
     respond_to do |format|
       if @consent.save
@@ -67,10 +69,11 @@ class ConsentsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_consent
       @consent = Consent.find(params.expect(:id))
+      authorize @consent
     end
 
-    # granted_at and revoked_at are history. Revoking happens only through #revoke.
+    # The citizen is always the signed-in user. granted_at and revoked_at are history.
     def consent_params
-      params.expect(consent: [ :citizen_id, :service_id ])
+      params.expect(consent: [ :service_id ])
     end
 end

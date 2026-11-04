@@ -2,7 +2,9 @@
 
 <div class="page-header">
   <h1>Services</h1>
-  <%= link_to "New service", new_service_path, class: "btn" %>
+  <% if policy(Service).create? %>
+    <%= link_to "New service", new_service_path, class: "btn" %>
+  <% end %>
 </div>
 
 <div id="services" class="card-list">

@@ -25,12 +25,39 @@ class ConsentsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "should create consent" do
+  test "should create consent for the signed-in citizen" do
     service = Service.create!(name: "New Service")
     assert_difference("Consent.count") do
-      post consents_url, params: { consent: { citizen_id: @consent.citizen_id, service_id: service.id } }
+      post consents_url, params: { consent: { citizen_id: citizens(:two).id, service_id: service.id } }
     end
     assert_redirected_to consent_url(Consent.last)
+    assert_equal users(:one).citizen, Consent.last.citizen
+  end
+
+  test "index lists only the signed-in citizen's consents" do
+    get consents_url
+    assert_match citizens(:one).name, response.body
+    assert_no_match citizens(:two).name, response.body
+  end
+
+  test "admin index lists every consent" do
+    sign_in_as(users(:admin))
+    get consents_url
+    assert_match citizens(:one).name, response.body
+    assert_match citizens(:two).name, response.body
+  end
+
+  test "cannot open another citizen's consent" do
+    get consent_url(consents(:old))
+    assert_redirected_to root_url
+    assert_equal "You are not allowed to do that.", flash[:alert]
+  end
+
+  test "cannot revoke another citizen's consent" do
+    consent = consents(:old)
+    patch revoke_consent_url(consent)
+    assert_redirected_to root_url
+    assert_nil consent.reload.revoked_at
   end
 
   test "should revoke consent" do
@@ -55,6 +82,7 @@ class ConsentsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "patch cannot change revoked_at or granted_at" do
+    sign_in_as(users(:two))
     consent = consents(:revoked)
     granted_at = consent.granted_at
     revoked_at = consent.revoked_at

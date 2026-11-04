@@ -21,6 +21,13 @@
     <%= form.text_field :email %>
   </div>
 
+  <% if Current.user.admin? %>
+    <div class="field">
+      <%= form.label :verified, "Verified identity" %>
+      <%= form.check_box :verified %>
+    </div>
+  <% end %>
+
   <div class="field">
     <%= form.submit class: "btn" %>
   </div>

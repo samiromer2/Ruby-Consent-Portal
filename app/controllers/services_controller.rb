@@ -3,7 +3,7 @@ class ServicesController < ApplicationController
 
   # GET /services or /services.json
   def index
-    @services = Service.all
+    @services = policy_scope(Service).order(:name)
   end
 
   # GET /services/1 or /services/1.json
@@ -13,6 +13,7 @@ class ServicesController < ApplicationController
   # GET /services/new
   def new
     @service = Service.new
+    authorize @service
   end
 
   # GET /services/1/edit
@@ -22,6 +23,7 @@ class ServicesController < ApplicationController
   # POST /services or /services.json
   def create
     @service = Service.new(service_params)
+    authorize @service
 
     respond_to do |format|
       if @service.save
@@ -61,6 +63,7 @@ class ServicesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_service
       @service = Service.find(params.expect(:id))
+      authorize @service
     end
 
     # Only allow a list of trusted parameters through.

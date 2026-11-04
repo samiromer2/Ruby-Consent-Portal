@@ -19,6 +19,7 @@ class RegistrationsControllerTest < ActionDispatch::IntegrationTest
     end
 
     user = User.find_by!(email_address: "new-person@example.com")
+    assert user.citizen?
     assert_equal "New Person", user.citizen.name
     assert_equal user.email_address, user.citizen.email
     assert_redirected_to root_path

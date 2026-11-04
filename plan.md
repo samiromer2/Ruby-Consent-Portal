@@ -54,12 +54,12 @@ Learning: `has_secure_password`, sessions and cookies, `before_action`, `Current
 
 Goal: citizens only see and change their own consents; admins manage services.
 
-- [ ] Add a `role` to users (`citizen`, `admin`) with a Rails `enum`.
-- [ ] Add Pundit, with policies for `Consent`, `Service` and `Citizen`.
-- [ ] Citizens: see only their own consents, grant and revoke only their own.
-- [ ] Admins: create/edit/delete services, see all consents, set `verified` on citizens (the only place that's allowed).
-- [ ] Scope the consent form: a citizen picks only a service, the citizen is `Current.user.citizen`.
-- [ ] Policy tests, plus a controller test proving a citizen gets 403/redirect on someone else's consent.
+- [x] Add a `role` to users (`citizen`, `admin`) with a Rails `enum`.
+- [x] Add Pundit, with policies for `Consent`, `Service` and `Citizen`.
+- [x] Citizens: see only their own consents, grant and revoke only their own.
+- [x] Admins: create/edit/delete services, see all consents, set `verified` on citizens (the only place that's allowed).
+- [x] Scope the consent form: a citizen picks only a service, the citizen is `Current.user.citizen`.
+- [x] Policy tests, plus a controller test proving a citizen gets 403/redirect on someone else's consent.
 
 Done when: one citizen can't see or touch another citizen's data, proven by tests.
 
