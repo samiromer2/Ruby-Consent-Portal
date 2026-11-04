@@ -1,42 +1,28 @@
 # Consent Portal
 
-A Ruby on Rails app for managing consent: **citizens** give **consent** to **services** and can revoke it at any time.
+A finished Ruby on Rails app for managing consent. A citizen grants a service permission to use their data, and can take that permission back. Withdrawing consent keeps the record of when it was granted and when it was revoked.
 
-It covers the core of a consent-management system: data integrity enforced in both Ruby and PostgreSQL, a custom revoke action, a background job for expiry, a zero-downtime migration, and tests at every level from models to the browser.
+Run it locally with the demo accounts below. It is not deployed.
+
+## What it does
+
+- **Accounts.** Sign up, sign in, and sign out. Rails 8 authentication stores sessions in the database. Sign-in is rate limited. Each citizen account is linked to one citizen record.
+- **Two roles.** A citizen sees and changes only their own consents. An admin sees every consent, manages services, and can mark a citizen as verified. An admin cannot grant or revoke someone else's consent.
+- **One consent per citizen per service.** A model validation returns a friendly error, and a unique index in PostgreSQL enforces it when two requests arrive together.
+- **Revoke, don't delete.** `PATCH /consents/:id/revoke` sets `revoked_at`. Consents are not edited. `granted_at` and `revoked_at` are not in the form, so a request cannot bring a revoked consent back.
+- **Audit log.** Each grant, revoke, and expiry writes a `ConsentEvent`. Saved events cannot be updated or deleted. A citizen, service, or consent that has history cannot be destroyed.
+- **Citizen home and admin dashboard.** Citizens land on My consents, with Active, Revoked, and All tabs, search, a service filter, and pagination. Revoke updates the page without a full reload. Admins land on counts of citizens, services, and consents.
+- **Nightly expiry.** `ExpireStaleConsentsJob` revokes active consents older than one year, writes an expired event, and emails the citizen. In production, Solid Queue runs it at 3am (`config/recurring.yml`).
+- **JSON API.** Other systems list, read, and revoke consents at `/api/v1` with a bearer token.
 
 ## Tech stack
 
 - Ruby 4.0.6, Rails 8.1
 - PostgreSQL
 - Hotwire (Turbo, Stimulus) via importmap
-- Minitest with fixtures, Capybara and Selenium for system tests
-- GitHub Actions CI: RuboCop, Brakeman, bundler-audit, importmap audit, unit tests and system tests
-
-## Features
-
-- **Citizens, services and consents.** A consent links one citizen to one service (`has_many :through`).
-- **One consent per citizen per service.** Enforced twice: a model validation gives a friendly error, and a unique index in PostgreSQL guarantees it, even if two requests arrive at the same moment.
-- **Revoke instead of delete.** `PATCH /consents/:id/revoke` sets `revoked_at`, so there is a record of when consent was withdrawn. `Consent.active` returns only consents that haven't been revoked.
-- **Automatic expiry.** `ExpireStaleConsentsJob` revokes active consents older than one year. It uses `find_each` to process records in batches.
-- **Secure by default.**
-  - Strong parameters don't allow `verified` on citizens, so users can't mark their own identity as verified.
-  - Emails are normalized (trimmed and lowercased) and must be unique regardless of case.
-- **No N+1 queries.** The consents list eager-loads citizens and services with `includes`.
-- **Zero-downtime migration.** The `revoked_at` index is built with `algorithm: :concurrently`, so it doesn't lock writes on a large table.
-
-## Project layout
-
-The main Ruby code lives in a handful of files:
-
-| File | What it does |
-|---|---|
-| `app/models/citizen.rb` | Associations, email normalization and validation |
-| `app/models/consent.rb` | Uniqueness rule, `active` scope, `active?` and `revoke!` |
-| `app/models/service.rb` | Associations and validation |
-| `app/controllers/consents_controller.rb` | CRUD plus the `revoke` member action |
-| `app/jobs/expire_stale_consents_job.rb` | Revokes consents older than a year |
-| `config/routes.rb` | RESTful routes, with `PATCH /consents/:id/revoke` |
-| `db/migrate/` | Schema history, including the concurrent index migration |
+- Pundit for authorization, Pagy for pagination, Solid Queue for jobs
+- Minitest with fixtures, one RSpec example with FactoryBot, Capybara and Selenium for system tests, Playwright for the smoke test
+- GitHub Actions: RuboCop, Brakeman, bundler-audit, importmap audit, unit tests, system tests, and the Playwright smoke test
 
 ## Getting started
 
@@ -46,91 +32,43 @@ Requirements: Ruby 4.0.6, PostgreSQL running locally, and Google Chrome for the 
 git clone https://github.com/samiromer2/Ruby-Consent-Portal.git
 cd Ruby-Consent-Portal
 bin/setup
+bin/rails db:seed
 ```
 
-`bin/setup` installs the gems, creates and migrates the database, and starts the server. Then open http://localhost:3000.
+`bin/setup` installs the gems, prepares the database, and starts the server. Open http://localhost:3000.
 
-Load the demo accounts with `bin/rails db:seed`:
+Start it again later with `bin/rails server`. Run the job worker with `bin/jobs` when you want to watch background work in development.
 
 | Email | Password | What you can do |
 |---|---|---|
 | `admin@example.com` | `password` | See every consent and manage services |
 | `citizen@example.com` | `password` | See and revoke that citizen's consents |
 
-The password is for a local demo. Change it before the app is reachable on a public server.
+The password is for this local demo.
 
-## Deploy
+## Project layout
 
-The app is set up for [Kamal](https://kamal-deploy.org/). `config/deploy.yml` still points at the placeholder host `192.168.0.1`. There is no public URL yet.
+| File | What it does |
+|---|---|
+| `app/models/consent.rb` | Uniqueness rule, `active` scope, `revoke!` |
+| `app/models/consent_event.rb` | Append-only audit log |
+| `app/policies/consent_policy.rb` | Who can see, grant, and revoke a consent |
+| `app/services/consents/revoke.rb` | Revoke plus the revoked event |
+| `app/controllers/dashboard_controller.rb` | Citizen home and admin counts |
+| `app/controllers/api/v1/consents_controller.rb` | Token-authenticated JSON API |
+| `app/jobs/expire_stale_consents_job.rb` | Revokes consents older than a year and sends the email |
+| `config/recurring.yml` | Nightly schedule for the expiry job |
+| `config/routes.rb` | Web routes and `/api/v1` |
 
-Before the first deploy, replace that host, set `APP_HOST` to the real hostname, and provide `RAILS_MASTER_KEY` and `CONSENT_PORTAL_DATABASE_PASSWORD`. Production uses four PostgreSQL databases (primary, cache, queue, and cable). Solid Queue runs inside Puma (`SOLID_QUEUE_IN_PUMA`). Then:
-
-```bash
-bin/kamal setup
-```
-
-To start the server again later:
-
-```bash
-bin/rails server
-```
-
-## Running the tests
-
-```bash
-bin/rails test           # model, controller, integration and job tests
-bin/rails test:system    # browser tests in headless Chrome
-bundle exec rspec        # one Consent example, using FactoryBot
-```
-
-`bin/rails test` writes a coverage report to `coverage/index.html`.
-
-CI also runs `script/playwright/consent_flow.py` against a booted server.
-
-| Kind | Where | What it covers |
-|---|---|---|
-| Model | `test/models` | Validations, email normalization, the `active` scope, `revoke!` |
-| Controller | `test/controllers` | CRUD actions and the revoke action |
-| Job | `test/jobs` | Expiry revokes old consents and leaves recent ones alone |
-| System | `test/system` | A user clicks "Revoke consent" and sees the Revoked badge |
-
-### End-to-end smoke test (Playwright, Python)
-
-`script/playwright/consent_flow.py` drives the running app in Chromium. It creates a citizen and a service, grants consent, checks that a duplicate is blocked, revokes the consent, and checks that the history cannot be deleted.
-
-```bash
-cd script/playwright
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt && playwright install chromium
-python consent_flow.py --headed --slow-mo 500
-```
-
-Run it while `bin/rails server` is running. Use `--keep` to keep the test data and `--base-url` to point it at another server. Screenshots are saved in `script/playwright/screenshots/`.
-
-## Quality checks
-
-```bash
-bin/rubocop               # code style
-bin/brakeman              # static security scan
-bin/bundler-audit         # known vulnerabilities in gems
-bin/importmap audit       # known vulnerabilities in JavaScript packages
-```
-
-CI runs all of these, plus both test suites, on every push and pull request (`.github/workflows/ci.yml`).
-
-## Background job
-
-Run the expiry job by hand from the console:
-
-```bash
-bin/rails runner "ExpireStaleConsentsJob.perform_now"
-```
-
-In production it runs nightly at 3am as a Solid Queue recurring job (`config/recurring.yml`).
+`plan.md` is the build log for the phases. The checkboxes there are the record of how the app was built.
 
 ## JSON API
 
-Other systems can read and revoke consents at `/api/v1`. Send the user's token in the `Authorization` header. A user receives a token when the account is created. Read one from the console with `User.find_by!(email_address: "admin@example.com").api_token`.
+Send the user's token as `Authorization: Bearer`. A token is created with the account. Read one from the console:
+
+```bash
+bin/rails runner 'puts User.find_by!(email_address: "admin@example.com").api_token'
+```
 
 ```bash
 curl -H "Authorization: Bearer $TOKEN" http://localhost:3000/api/v1/consents
@@ -145,22 +83,56 @@ curl -X PATCH -H "Authorization: Bearer $TOKEN" http://localhost:3000/api/v1/con
 | `GET /api/v1/consents/:id` | Owner or admin | One consent |
 | `PATCH /api/v1/consents/:id/revoke` | Owner of an active consent | Sets `revoked_at` and writes a revoked event |
 
-A missing or unknown token returns `401`. A signed-in client who is not allowed to see or revoke that consent returns `403`.
+A missing or unknown token returns `401`. A client who is not allowed to see or revoke that consent returns `403`.
 
 ## Data model
 
 ```
-Citizen ──< Consent >── Service
-User ── Citizen
-
-users      email_address, role (citizen or admin), api_token
-citizens   name, email (unique), verified
-services   name, description
-consents   citizen_id, service_id (unique together), granted_at, revoked_at
+User ── Citizen ──< Consent >── Service
+                     │
+                     └──< ConsentEvent
 ```
 
-## Still open
+```
+users           email_address, role (citizen or admin), api_token
+citizens        name, email (unique), verified
+services        name, description
+consents        citizen_id, service_id (unique together), granted_at, revoked_at
+consent_events  consent_id, user_id, action (granted, revoked, expired)
+```
 
-- A public URL. Kamal is configured, and the host in `config/deploy.yml` is still a placeholder.
-- Sign-in with an identity provider (OIDC), kept alongside the password form.
-- Error tracking (Honeybadger or Sentry).
+## Tests
+
+```bash
+bin/rails test           # model, controller, integration, and job tests
+bin/rails test:system    # browser test in headless Chrome
+bundle exec rspec        # one Consent example, using FactoryBot
+```
+
+`bin/rails test` writes a coverage report to `coverage/index.html`.
+
+The Playwright smoke test drives a running server: sign in as the admin, create a service, sign up, grant consent, block a duplicate, revoke, and confirm that history cannot be deleted.
+
+```bash
+cd script/playwright
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt && playwright install chromium
+python consent_flow.py --headed --slow-mo 500
+```
+
+Run it while `bin/rails server` is running. `--keep` leaves the test data in place. `--base-url` points it at another server. Screenshots are saved in `script/playwright/screenshots/`.
+
+```bash
+bin/rubocop               # code style
+bin/brakeman              # static security scan
+bin/bundler-audit         # known vulnerabilities in gems
+bin/importmap audit       # known vulnerabilities in JavaScript packages
+```
+
+CI runs these checks on every push and pull request (`.github/workflows/ci.yml`). `main` requires them before a merge.
+
+## Status
+
+This repository is the completed app, for local use.
+
+Kamal's config is in `config/deploy.yml` and still uses the placeholder host `192.168.0.1`. There is no public site. Sign-in is email and password. Errors are not sent to an external tracker. Those three boundaries are written down in [#20](https://github.com/samiromer2/Ruby-Consent-Portal/issues/20), [#21](https://github.com/samiromer2/Ruby-Consent-Portal/issues/21), and [#22](https://github.com/samiromer2/Ruby-Consent-Portal/issues/22).
