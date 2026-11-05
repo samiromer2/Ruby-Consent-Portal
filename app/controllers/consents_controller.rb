@@ -40,6 +40,9 @@ class ConsentsController < ApplicationController
     else
       render :new, status: :unprocessable_content
     end
+  rescue ActiveRecord::RecordNotUnique
+    @consent.errors.add(:service_id, "already has consent from this citizen")
+    render :new, status: :unprocessable_content
   end
 
   # DELETE /consents/1 or /consents/1.json
