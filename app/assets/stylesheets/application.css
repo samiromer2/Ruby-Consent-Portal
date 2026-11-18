@@ -10,6 +10,7 @@
   --border: #e4e7eb;
   --primary: #1d4ed8;
   --primary-dark: #1e40af;
+  --link: #1d4ed8;
   --danger: #b91c1c;
   --warning: #b45309;
   --success-bg: #dcfce7;
@@ -29,7 +30,7 @@ body {
   line-height: 1.5;
 }
 
-a { color: var(--primary); }
+a { color: var(--link); }
 
 h1 { font-size: 1.75rem; margin: 0 0 1rem; }
 
@@ -165,7 +166,7 @@ input[type="submit"]:hover { background: var(--primary-dark); }
 .btn-secondary {
   background: var(--surface);
   color: var(--text);
-  border-color: #cbd2d9;
+  border-color: var(--border);
 }
 
 .btn-secondary:hover { background: var(--bg); }
@@ -208,6 +209,7 @@ form textarea {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--surface);
+  color: var(--text);
   font: inherit;
 }
 
@@ -306,6 +308,22 @@ form textarea { min-height: 100px; }
 
 .pagination { margin-top: 1rem; }
 .pagination a, .pagination span { margin-right: 0.35rem; }
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --bg: #111827;
+    --surface: #1f2937;
+    --text: #f3f4f6;
+    --muted: #a6b1c2;
+    --border: #3d4b5d;
+    --link: #93c5fd;
+    --success-bg: #14532d;
+    --success-text: #bbf7d0;
+    --error-bg: #7f1d1d;
+    --error-text: #fecaca;
+  }
+}
 
 @media (max-width: 560px) {
   .card { flex-direction: column; align-items: flex-start; }
