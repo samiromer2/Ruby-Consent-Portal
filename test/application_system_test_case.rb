@@ -4,7 +4,7 @@ require "test_helper"
 # passes to the CDP Storage.clearDataForOrigin command ("* is not a valid URL"),
 # which errors every system test in teardown. When Chrome rejects the wildcard,
 # clear all cookies and the app server origin's storage explicitly instead.
-# Older Chrome versions (e.g. the one in CI) still accept "*" and keep using it.
+# Chrome versions that still accept "*" keep Capybara's original behaviour.
 module ChromeStorageClearWithoutWildcard
   private
 
