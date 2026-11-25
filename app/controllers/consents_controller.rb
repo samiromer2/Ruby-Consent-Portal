@@ -6,7 +6,7 @@ class ConsentsController < ApplicationController
   # GET /consents or /consents.json
   def index
     load_consent_page
-  rescue Pagy::OverflowError
+  rescue Pagy::RangeError
     redirect_to consents_path(request.query_parameters.merge(page: 1))
   end
 
