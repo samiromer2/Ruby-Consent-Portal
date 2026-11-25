@@ -11,7 +11,7 @@ Thanks for helping. New to Ruby or Rails? That's fine. This project was its auth
 
 ## Set up
 
-Follow [Getting started](README.md#getting-started) in the README: Ruby 4.0.6, PostgreSQL, and Chrome for the system tests.
+Follow [Getting started](README.md#getting-started) in the README: Ruby 4.0.10, PostgreSQL, and Chrome for the system tests.
 
 ```bash
 bin/setup

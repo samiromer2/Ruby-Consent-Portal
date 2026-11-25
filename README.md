@@ -17,7 +17,7 @@ Run it locally with the demo accounts below. It is not deployed.
 
 ## Tech stack
 
-- Ruby 4.0.6, Rails 8.1
+- Ruby 4.0.10, Rails 8.1
 - PostgreSQL
 - Hotwire (Turbo, Stimulus) via importmap
 - Pundit for authorization, Pagy for pagination, Solid Queue for jobs
@@ -26,7 +26,7 @@ Run it locally with the demo accounts below. It is not deployed.
 
 ## Getting started
 
-Requirements: Ruby 4.0.6, PostgreSQL running locally, and Google Chrome for the system tests.
+Requirements: Ruby 4.0.10, PostgreSQL running locally, and Google Chrome for the system tests.
 
 ```bash
 git clone https://github.com/samiromer2/Ruby-Consent-Portal.git
