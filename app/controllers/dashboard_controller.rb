@@ -15,7 +15,7 @@ class DashboardController < ApplicationController
       load_consent_page
       render "consents/index"
     end
-  rescue Pagy::OverflowError
+  rescue Pagy::RangeError
     redirect_to root_path(request.query_parameters.merge(page: 1))
   end
 end

@@ -49,6 +49,11 @@ class ConsentsControllerTest < ActionDispatch::IntegrationTest
     assert_match citizens(:one).name, response.body
   end
 
+  test "redirects to the first page when the page is out of range" do
+    get consents_url(page: 99, status: "active")
+    assert_redirected_to consents_url(page: 1, status: "active")
+  end
+
   test "revoke responds with a turbo stream" do
     patch revoke_consent_url(@consent), as: :turbo_stream
     assert_response :success
